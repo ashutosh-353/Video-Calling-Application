@@ -1,0 +1,460 @@
+.landingPageContainer {
+  width: 100vw;
+  height: 100vh;
+  background: url("/public/background-2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+}
+
+.landingPageContainer nav {
+  padding-inline: 1.2rem;
+  padding-block: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landingPageContainer nav img {
+  height: 9.375rem;
+  width: 11.25rem;
+  cursor: pointer;
+  position: relative;
+  right: 3.125rem;
+  bottom: 1.875rem;
+}
+
+.landingPageContainer nav .navList {
+  display: flex;
+  gap: 1.6rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  position: relative;
+  bottom: 3.125rem;
+  right: 1.875rem;
+}
+
+/* Underline effect for navList */
+.landingPageContainer nav .navList p,
+.landingPageContainer nav .navList div[role="button"] {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: color 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.landingPageContainer nav .navList p::after,
+.landingPageContainer nav .navList div[role="button"]::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -0.25rem;
+  width: 0;
+  height: 0.1875rem;
+  background: linear-gradient(90deg, #00e6fe 0%, #ffb347 100%);
+  border-radius: 0.125rem;
+  transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.landingPageContainer nav .navList p:hover,
+.landingPageContainer nav .navList div[role="button"]:hover {
+  color: #00e6fe;
+}
+
+.landingPageContainer nav .navList p:hover::after,
+.landingPageContainer nav .navList div[role="button"]:hover::after {
+  width: 100%;
+}
+
+/* Remove underline from navList div[role="button"] by default */
+.landingPageContainer nav .navList div[role="button"]::after {
+  display: none;
+}
+
+/* Add underline only for the Login button */
+.landingPageContainer nav .navList .login-btn::after {
+  display: block;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.25rem;
+  width: 0;
+  height: 0.1875rem;
+  background: linear-gradient(90deg, #00e6fe 0%, #ffb347 100%);
+  border-radius: 0.125rem;
+  transition: width 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Animate underline on hover for Login only */
+.landingPageContainer nav .navList .login-btn:hover::after {
+  width: 100%;
+}
+
+.landingMainContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 3rem;
+  height: 80vh;
+  align-items: center;
+  position: relative;
+  bottom: 4.375rem;
+}
+
+.landingMainContainer > div:nth-child(1) {
+  position: relative;
+  bottom: 3.125rem;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-3.75rem) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.landingMainContainer > div:nth-child(1) {
+  animation: fadeInLeft 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0;
+}
+
+/*This lines are for floating animations*/
+
+/* @keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.landingMainContainer > div:nth-child(1) {
+  animation: floatY 3.5s ease-in-out infinite;
+} */
+
+.landingMainContainer > div:nth-child(1) h1 {
+  font-size: 3.5rem;
+  width: auto;
+  max-width: 37.5rem;
+}
+
+.landingMainContainer > div:nth-child(1) p {
+  font-size: 1.6rem;
+  width: 40vw;
+  margin-top: 1.2rem;
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"] {
+  background: #d97500;
+  width: fit-content;
+  padding: 1rem;
+  padding-right: 1.8rem;
+  padding-left: 1.8rem;
+  border-radius: 2rem;
+  margin-top: 2rem;
+  font-size: 1.3rem;
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"] {
+  background: linear-gradient(90deg, #d97500 60%, #ffb347 100%);
+  width: fit-content;
+  padding: 0.7rem;
+  padding-right: 1.8rem;
+  padding-left: 1.8rem;
+  border-radius: 2rem;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0.25rem 1rem 0 rgba(217, 117, 0, 0.12);
+  cursor: pointer;
+  transition: background 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+    transform 0.18s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.18s cubic-bezier(0.23, 1, 0.32, 1), letter-spacing 0.18s;
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"]:hover,
+.landingMainContainer > div:nth-child(1) div[role="button"]:focus {
+  background: linear-gradient(90deg, #ffb347 0%, #d97500 100%);
+  transform: scale(1.06) translateY(-0.125rem);
+  box-shadow: 0 0.5rem 2rem 0 rgba(217, 117, 0, 0.22),
+    0 0.125rem 0.5rem 0 rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.0625rem;
+  outline: none;
+}
+
+.landingMainContainer > div:nth-child(1) div[role="button"]:active {
+  transform: scale(0.98);
+  box-shadow: 0 0.125rem 0.5rem 0 rgba(217, 117, 0, 0.1);
+}
+
+.landingMainContainer > div:nth-child(2) {
+  height: 85vh;
+  width: 100%;
+  max-width: 37.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  position: relative;
+  bottom: 0.625rem;
+}
+
+.landingMainContainer > div:nth-child(2) .card1 {
+  height: 53.75rem;
+  width: 100%;
+  position: relative;
+  right: 8.125rem;
+  border-bottom-right-radius: 1.5625rem;
+  border-top-left-radius: 1.5625rem;
+}
+
+.landingMainContainer > div:nth-child(2) .card2 {
+  height: 53.75rem;
+  width: 100%;
+  position: relative;
+  left: 5rem;
+  border-radius: 15% 10% 15% 0%;
+}
+
+.landingMainContainer > div:nth-child(2) .card3 {
+  height: 53.75rem;
+  width: 100%;
+  position: relative;
+  right: 12.5rem;
+  border-top-right-radius: 1.5625rem;
+  border-bottom-left-radius: 1.5625rem;
+}
+
+/* Transparent background and white text for card content */
+.landingMainContainer > div:nth-child(2) .MuiCardContent-root {
+  background: transparent !important;
+  color: black !important;
+  position: relative;
+  bottom: 0.4375rem;
+}
+
+/* Fade-in and slide-up animation */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Apply animation to all cards */
+.landingMainContainer > div:nth-child(2) .card1,
+.landingMainContainer > div:nth-child(2) .card2,
+.landingMainContainer > div:nth-child(2) .card3 {
+  animation: cardFadeIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0;
+}
+
+/* Stagger the animation for each card */
+.landingMainContainer > div:nth-child(2) .card1 {
+  animation-delay: 0.1s;
+}
+.landingMainContainer > div:nth-child(2) .card2 {
+  animation-delay: 0.3s;
+}
+.landingMainContainer > div:nth-child(2) .card3 {
+  animation-delay: 0.5s;
+}
+
+/* Show cards after animation */
+.landingMainContainer > div:nth-child(2) .card1,
+.landingMainContainer > div:nth-child(2) .card2,
+.landingMainContainer > div:nth-child(2) .card3 {
+  will-change: transform, opacity;
+}
+
+/* Hover effect for interactivity */
+.landingMainContainer > div:nth-child(2) .card1:hover,
+.landingMainContainer > div:nth-child(2) .card2:hover,
+.landingMainContainer > div:nth-child(2) .card3:hover {
+  transform: scale(1.04) translateY(-0.5rem);
+  box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.18),
+    0 0.09375rem 0.5rem 0 rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s;
+}
+
+.landingMainContainer > div:nth-child(2) .MuiCardContent-root > * {
+  color: #23272f;
+}
+
+@keyframes textFadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-2.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animate all text inside card content */
+.landingMainContainer > div:nth-child(2) .MuiCardContent-root > * {
+  opacity: 0;
+  animation: textFadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* Stagger the animation for heading and paragraph for each card */
+.landingMainContainer > div:nth-child(2) .card1 .MuiCardContent-root > * {
+  animation-delay: 0.3s;
+}
+.landingMainContainer > div:nth-child(2) .card2 .MuiCardContent-root > * {
+  animation-delay: 0.5s;
+}
+.landingMainContainer > div:nth-child(2) .card3 .MuiCardContent-root > * {
+  animation-delay: 0.7s;
+}
+
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 1.25rem;
+  text-align: center;
+}
+.meetContainer {
+  display: flex;
+  padding-inline: 1.25rem;
+  height: 80vh;
+  gap: 10vw;
+  justify-content: center;
+}
+
+.leftPanel {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.rightPanel {
+  display: flex;
+  align-items: center;
+}
+
+.rightPanel > img {
+  width: 30vw;
+  height: auto;
+  border-radius: 1.25rem;
+}
+
+
+
+
+
+
+
+
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+  .landingPageContainer {
+    width: 100vw;
+    height: auto;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  .landingPageContainer nav {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-inline: 0.8rem;
+    padding-block: 1rem;
+  }
+
+  .landingPageContainer nav img {
+    height: 4.5rem;
+    width: 6rem;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 1rem;
+  }
+
+  .landingPageContainer nav .navList {
+    flex-direction: column;
+    gap: 0.8rem;
+    font-size: 1rem;
+    position: static;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .landingMainContainer {
+    flex-direction: column;
+    padding-inline: 0.5rem;
+    height: auto;
+    bottom: 0;
+    gap: 2rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) {
+    bottom: 0;
+    width: 100%;
+    text-align: left;
+  }
+
+  .landingMainContainer > div:nth-child(1) h1 {
+    font-size: 2rem;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  .landingMainContainer > div:nth-child(1) p {
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+
+  .landingMainContainer > div:nth-child(1) div[role="button"] {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    margin-top: 1.2rem;
+  }
+
+  .landingMainContainer > div:nth-child(2) {
+    max-width: 100%;
+    height: auto;
+    gap: 1.2rem;
+    bottom: 0;
+  }
+
+  .landingMainContainer > div:nth-child(2) .card1,
+  .landingMainContainer > div:nth-child(2) .card2,
+  .landingMainContainer > div:nth-child(2) .card3 {
+    height: auto;
+    min-height: 12rem;
+    width: 100%;
+    right: 0 !important;
+    left: 0 !important;
+    margin: 0 auto;
+    border-radius: 1rem !important;
+  }
+
+  .landingMainContainer > div:nth-child(2) .MuiCardContent-root {
+    padding: 0.8rem !important;
+    font-size: 1rem;
+    bottom: 0;
+  }
+
+  .navBar,
+  .meetContainer {
+    flex-direction: column;
+    padding-inline: 0.5rem;
+    height: auto;
+    gap: 1.2rem;
+  }
+
+  .rightPanel > img {
+    width: 90vw;
+    max-width: 100%;
+    border-radius: 0.75rem;
+  }
+}
