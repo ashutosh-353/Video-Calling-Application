@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -26,7 +27,24 @@ export default function Authentication() {
   const [error, setError] = React.useState();
   const [message, setMessage] = React.useState();
 
-  const [formState, setFormState] = React.useState(0);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const mode = params.get("mode");
+  const [formState, setFormState] = React.useState(mode === "signup" ? 1 : 0);
+
+  
+  
+  
+  const fullNameRef = React.useRef();
+  React.useEffect(() => {
+    if (formState === 1 && fullNameRef.current) {
+      fullNameRef.current.focus();
+    }
+  }, [formState]);
+
+
+
+
 
   const [open, setOpen] = React.useState(false);
 
@@ -118,7 +136,10 @@ export default function Authentication() {
               </Button>
             </div>
 
-            <Box component="form" noValidate sx={{ mt: 1 }}>
+            <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={(e) => {
+    e.preventDefault();
+    handleAuth();
+  }}>
               {formState === 1 ? (
                 <TextField
                   margin="normal"
@@ -128,7 +149,7 @@ export default function Authentication() {
                   label="Full Name"
                   name="username"
                   value={name}
-                  autoFocus
+                  inputRef={fullNameRef}
                   onChange={(e) => setName(e.target.value)}
                 />
               ) : (
@@ -161,11 +182,11 @@ export default function Authentication() {
               <p style={{ color: "red" }}>{error}</p>
 
               <Button
-                type="button"
+                type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={handleAuth}
+                // onClick={handleAuth}
               >
                 {formState === 0 ? "Login " : "Register"}
               </Button>
