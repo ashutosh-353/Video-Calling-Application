@@ -52,7 +52,7 @@ export default function LandingPage() {
             <span style={{ color: "#ed2424" }}>Loved</span> ones
           </h1>
 
-          <p>Cover the distance by <span style={{color:"#D97500", fontWeight:600}}>A_Call</span></p>
+          <p>Cover the distances by A_CALL</p>
           <div
             style={{ cursor: "pointer" }}
             onClick={() => router("/auth")}
