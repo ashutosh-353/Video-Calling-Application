@@ -29,8 +29,9 @@ export default function LandingPage() {
           </p>
           <p
             onClick={() => {
-              router("/auth");
+              router("/auth?mode=signup");
             }}
+
           >
             Register
           </p>
@@ -55,11 +56,11 @@ export default function LandingPage() {
           <p>Cover the distances by A_CALL</p>
           <div
             style={{ cursor: "pointer" }}
-            onClick={() => router("/auth")}
+            onClick={() => router("/auth?mode=signup")}
             role="button"
             tabIndex={0}
             onKeyPress={(e) => {
-              if (e.key === "Enter" || e.key === " ") router("/auth");
+              if (e.key === "Enter" || e.key === " ") router("/auth?mode=signup");
             }}
           >
             Get Started
