@@ -20,7 +20,7 @@ export default function LandingPage() {
 
         
         <div className="navList">
-          <p
+          <p 
             onClick={() => {
               router("/ash");
             }}

@@ -32,19 +32,12 @@ export default function Authentication() {
   const mode = params.get("mode");
   const [formState, setFormState] = React.useState(mode === "signup" ? 1 : 0);
 
-  
-  
-  
   const fullNameRef = React.useRef();
   React.useEffect(() => {
     if (formState === 1 && fullNameRef.current) {
       fullNameRef.current.focus();
     }
   }, [formState]);
-
-
-
-
 
   const [open, setOpen] = React.useState(false);
 
@@ -111,6 +104,8 @@ export default function Authentication() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              opacity: 0,
+              animation: "fadeIn 0.8s ease-in forwards",
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -136,10 +131,16 @@ export default function Authentication() {
               </Button>
             </div>
 
-            <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={(e) => {
-    e.preventDefault();
-    handleAuth();
-  }}>
+            <Box
+              component="form"
+              noValidate
+              sx={{ mt: 1, position:"relative" }}
+              className={`auth-form-fade`}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleAuth();
+              }}
+            >
               {formState === 1 ? (
                 <TextField
                   margin="normal"
@@ -186,7 +187,7 @@ export default function Authentication() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                // onClick={handleAuth}
+                className="auth-animated-btn"
               >
                 {formState === 0 ? "Login " : "Register"}
               </Button>
