@@ -61,9 +61,6 @@
 }
 /* Add more nth-child rules if you have more nav items */
 
-
-
-
 /* Underline effect for navList */
 .landingPageContainer nav .navList p,
 .landingPageContainer nav .navList div[role="button"] {
@@ -376,7 +373,21 @@
   border-radius: 1.25rem;
 }
 
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
 
+.auth-form-fade {
+  transition: opacity 0.4s;
+  opacity: 1;
+}
+.auth-form-fade.hide {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
 
 
 
@@ -388,7 +399,7 @@
 
 
 /* Responsive styles for mobile devices*/
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
   .landingPageContainer {
     width: 100vw;
     height: auto;
@@ -397,103 +408,110 @@
   }
 
   .landingPageContainer nav {
+    display: flex;
     flex-direction: row;
     align-items: flex-start;
     padding-inline: 0.8rem;
     padding-block: 1rem;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
     padding-top: 0;
     padding-bottom: 0;
-    position:sticky;
-    top:0;
-    background:black;
-    z-index:1000;
-    height:90px;
+    position: sticky;
+    top: 0;
+    background: black;
+    z-index: 1000;
+    height: 5.625rem;
   }
 
   .landingPageContainer nav .navHeader {
     position: relative;
-    right: 30px;
-    height:90px;
+    right: 1.875rem;
+    height: 5.625rem;
   }
 
   .landingPageContainer nav img {
-    height: 90px;
+    height: 5.625rem;
     width: 7rem;
     right: 0;
     bottom: 0;
-    margin-bottom: 1rem;
   }
 
   .landingPageContainer nav .navList {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 0.8rem;
     font-size: 1rem;
-    position: static;
+    padding: 0.7rem;
     width: 100%;
-    align-items: center;
     justify-content: center;
-    height:3.75rem;
-    position:relative;
-    top:10px;
-    left:20px;
+    height: 3.75rem;
+    position: relative;
+    top: 0.625rem;
+    left: 1.25rem;
+  }
+
+  .landingPageContainer nav .navList p {
+    margin: 0;
   }
 
   @keyframes navListFadeInUp {
-  from {
+    from {
+      opacity: 0;
+      transform: translateY(1.875rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .landingPageContainer nav .navList > * {
     opacity: 0;
-    transform: translateY(30px);
+    animation: navListFadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .landingPageContainer nav .navList > *:nth-child(1) {
+    animation-delay: 0.2s;
   }
-}
-
-.landingPageContainer nav .navList > * {
-  opacity: 0;
-  animation: navListFadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-
-.landingPageContainer nav .navList > *:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.landingPageContainer nav .navList > *:nth-child(2) {
-  animation-delay: 0.4s;
-}
-.landingPageContainer nav .navList > *:nth-child(3) {
-  animation-delay: 0.6s;
-}
-/* Add more nth-child rules if you have more nav items */
+  .landingPageContainer nav .navList > *:nth-child(2) {
+    animation-delay: 0.4s;
+  }
+  .landingPageContainer nav .navList > *:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+  /* Add more nth-child rules if you have more nav items */
 
   .landingMainContainer {
+    display: flex;
     flex-direction: column;
-    padding-inline: 20px;
+    padding-inline: 1.25rem;
     height: auto;
-    bottom: 0;
+    bottom: 1rem;
     gap: 2rem;
   }
 
   .landingMainContainer > div:nth-child(1) {
+    display: flex;
     bottom: 0;
-    width: 372px;
+    flex-direction: column;
+    width: auto;
     text-align: left;
-    padding-bottom: 40px;
-    padding-top: 20px;
+    padding-bottom: 2.5rem;
+    padding-top: 1.25rem;
   }
 
   .landingMainContainer > div:nth-child(1) h1 {
     font-size: 2rem;
     max-width: 90%;
-    width:auto;
+    width: auto;
     word-break: break-word;
   }
 
   .landingMainContainer > div:nth-child(1) p {
     font-size: 1.1rem;
-    max-width:90%;
+    max-width: 90%;
     width: auto;
     margin-top: 0.8rem;
   }
@@ -541,5 +559,36 @@
     width: 90vw;
     max-width: 100%;
     border-radius: 0.75rem;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes buttonPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.08);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .auth-animated-btn:active {
+    animation: buttonPop 0.2s;
+  }
+
+  .auth-form-fade {
+    transition: opacity 0.4s;
+    opacity: 1;
+  }
+  .auth-form-fade.hide {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
   }
 }
