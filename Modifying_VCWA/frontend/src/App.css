@@ -591,4 +591,12 @@
     pointer-events: none;
     position: absolute;
   }
+
+  .meetContainer, .navBar {
+  animation: fadeIn 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
 }
