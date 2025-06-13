@@ -146,9 +146,9 @@ export default function Authentication() {
                   margin="normal"
                   required
                   fullWidth
-                  id="username"
+                  id="fullname"
                   label="Full Name"
-                  name="username"
+                  name="fullname"
                   value={name}
                   inputRef={fullNameRef}
                   onChange={(e) => setName(e.target.value)}
@@ -174,8 +174,8 @@ export default function Authentication() {
                 fullWidth
                 name="password"
                 label="Password"
-                value={password}
                 type="password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 id="password"
               />
