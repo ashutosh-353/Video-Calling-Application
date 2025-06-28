@@ -616,10 +616,17 @@ export default function VideoMeetComponent() {
           
           {video ? (
   <video
-    className={styles.meetUserVideo}
-    ref={localVideoref}
-    autoPlay
-    muted
+    // className={styles.meetUserVideo}
+    // ref={localVideoref}
+    // autoPlay
+    // muted
+
+  className={`${styles.meetUserVideo} ${styles.localVideoMirror}`}
+  ref={localVideoref}
+  autoPlay
+  muted
+
+
   ></video>
 ) : (
   <div

@@ -85,8 +85,8 @@
 }
 
 .meetUserVideo {
-  position: absolute;
-  bottom: 10vh;
+  position: relative;
+  top: 5vh;
   left: 2vw;
   height: 22vh;
   width: auto;
@@ -165,7 +165,7 @@
   z-index: 20;
 }
 
-.chatContainer {
+/* .chatContainer {
   position: relative;
   height: 100%;
   display: flex;
@@ -180,7 +180,65 @@
   border-radius: 0 0 16px 16px;
   padding: 12px 0;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+} */
+
+
+
+.chatContainer {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  background: rgba(245, 246, 250, 0.95);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(31, 38, 135, 0.07);
+  padding: 16px 12px 8px 12px;
+  margin: 10px 0;
+  overflow-y: auto;
+  min-height: 0;
+  max-height: 100%;
+  transition: box-shadow 0.3s;
 }
+
+.chatContainer h1 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #283593;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.chattingDisplay {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #bdbdbd #e3e3e3;
+}
+
+.chattingDisplay::-webkit-scrollbar {
+  width: 6px;
+  background: #e3e3e3;
+  border-radius: 8px;
+}
+.chattingDisplay::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 8px;
+}
+
+.chattingArea {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #f5f6fa;
+  border-radius: 8px;
+  padding: 8px 8px 8px 0;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+}
+
+
+
+
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -210,6 +268,11 @@
 
 .chatRoomHidden {
   display: none !important;
+}
+
+
+.localVideoMirror {
+  transform: scaleX(-1);
 }
 
 
@@ -322,22 +385,38 @@
 
   }
 
-  .chatContainer {
-    height: 100%;
+  /* .chatContainer {
+    height: 50%;
     display: flex;
     flex-direction: column;
+  } */
+
+
+  .chatContainer {
+    padding: 10px 4px 4px 4px;
+    margin: 4px 0;
+    border-radius: 12px;
+  }
+  .chattingArea {
+    padding: 6px 2px 6px 0;
+    border-radius: 8px;
   }
 
-  .chattingArea {
+  /* .chattingArea {
     position: static;
     padding: 8px 0;
     border-radius: 0 0 16px 16px;
     background: #f5f6fa;
     box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
-}
+} */
 
   .chatRoomHidden {
     display: none !important;
+}
+
+
+.localVideoMirror {
+  transform: scaleX(-1);
 }
 
 }
@@ -384,4 +463,8 @@
   .chatRoomHidden {
     display: none !important;
   }
+
+  .localVideoMirror {
+  transform: scaleX(-1);
+}
 }
