@@ -440,16 +440,16 @@ export default function VideoMeetComponent() {
 
   let handleVideo = () => {
     setVideo((prev) => {
-    const newVideo = !prev;
-    if (localVideoref.current && localVideoref.current.srcObject) {
-      const tracks = localVideoref.current.srcObject.getVideoTracks();
-      tracks.forEach((track) => {
-        track.enabled = newVideo;
-      });
-    }
-    return newVideo;
-  });
-    
+      const newVideo = !prev;
+      if (localVideoref.current && localVideoref.current.srcObject) {
+        const tracks = localVideoref.current.srcObject.getVideoTracks();
+        tracks.forEach((track) => {
+          track.enabled = newVideo;
+        });
+      }
+      return newVideo;
+    });
+
     // setVideo(!video);
     // // getUserMedia();
   };
@@ -526,7 +526,12 @@ export default function VideoMeetComponent() {
           </Button>
 
           <div>
-            <video ref={localVideoref} autoPlay muted></video>
+            <video
+              className={`${styles.meetUserVideo} ${styles.localVideoMirror}`}
+              ref={localVideoref}
+              autoPlay
+              muted
+            ></video>
           </div>
         </div>
       ) : (
@@ -597,59 +602,38 @@ export default function VideoMeetComponent() {
               <></>
             )}
 
-            {/* 
-            <Badge badgeContent={newMessages} max={999} color="orange">
-              <IconButton
-                onClick={() => setModal(!showModal)}
-                style={{ color: "white" }}
-              >
-                <ChatIcon />{" "}
-              </IconButton>
-            </Badge> */}
-
             <IconButton onClick={() => setShowChat(!showChat)}>
               <ChatIcon />
             </IconButton>
           </div>
 
-          
-          
           {video ? (
-  <video
-    // className={styles.meetUserVideo}
-    // ref={localVideoref}
-    // autoPlay
-    // muted
-
-  className={`${styles.meetUserVideo} ${styles.localVideoMirror}`}
-  ref={localVideoref}
-  autoPlay
-  muted
-
-
-  ></video>
-) : (
-  <div
-    className={styles.meetUserVideo}
-    style={{
-      background: "#222",
-      borderRadius: "20px",
-      width: "22vh",
-      height: "22vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#fff",
-      fontSize: "1.2rem",
-      border: "2px solid #fff",
-      boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-    }}
-  >
-    Video Off
-  </div>
-)}
-
-
+            <video
+              className={`${styles.meetUserVideo} ${styles.localVideoMirror}`}
+              ref={localVideoref}
+              autoPlay
+              muted
+            ></video>
+          ) : (
+            <div
+              className={styles.meetUserVideo}
+              style={{
+                background: "#222",
+                borderRadius: "20px",
+                width: "22vh",
+                height: "22vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#fff",
+                fontSize: "1.2rem",
+                border: "2px solid #fff",
+                boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+              }}
+            >
+              Video Off
+            </div>
+          )}
 
           <div className={styles.conferenceView}>
             {videos.map((video) => (
