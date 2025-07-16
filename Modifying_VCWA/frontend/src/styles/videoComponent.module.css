@@ -10,13 +10,26 @@
   position: relative;
   top: 5vh;
   left: 2vw;
+  width: 38vw; 
   height: 22vh;
-  width: auto;
   border-radius: 20px;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   border: 2px solid #fff;
   transition: box-shadow 0.3s;
 }
+
+
+.videoPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bdbdbd;
+  font-size: 2rem;
+  background: #222;
+ 
+}
+
+
 
 .meetUserVideo:hover {
   box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);

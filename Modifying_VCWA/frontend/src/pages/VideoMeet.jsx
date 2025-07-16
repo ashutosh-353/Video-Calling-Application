@@ -12,6 +12,8 @@ import ScreenShareIcon from "@mui/icons-material/ScreenShare";
 import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
 import ChatIcon from "@mui/icons-material/Chat";
 import server from "../environment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const server_url = server;
 
@@ -616,22 +618,9 @@ export default function VideoMeetComponent() {
             ></video>
           ) : (
             <div
-              className={styles.meetUserVideo}
-              style={{
-                background: "#222",
-                borderRadius: "20px",
-                width: "22vh",
-                height: "22vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#fff",
-                fontSize: "1.2rem",
-                border: "2px solid #fff",
-                boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-              }}
+              className={`${styles.meetUserVideo} ${styles.videoPlaceholder} ${styles.localVideoMirror}`}
             >
-              Video Off
+              <FontAwesomeIcon icon={faUser} size="4x" color="#bdbdbd" />
             </div>
           )}
 
