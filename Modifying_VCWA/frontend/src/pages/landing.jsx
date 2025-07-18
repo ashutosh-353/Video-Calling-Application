@@ -18,9 +18,8 @@ export default function LandingPage() {
           <img src="/video_full_logo.gif" alt="" />
         </div>
 
-        
         <div className="navList">
-          <p 
+          <p
             onClick={() => {
               router("/ash");
             }}
@@ -31,7 +30,6 @@ export default function LandingPage() {
             onClick={() => {
               router("/auth?mode=signup");
             }}
-
           >
             Register
           </p>
@@ -60,14 +58,97 @@ export default function LandingPage() {
             role="button"
             tabIndex={0}
             onKeyPress={(e) => {
-              if (e.key === "Enter" || e.key === " ") router("/auth?mode=signup");
+              if (e.key === "Enter" || e.key === " ")
+                router("/auth?mode=signup");
             }}
           >
             Get Started
           </div>
         </div>
 
-        <div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {/* Testing */}
+        <div className="cardGrid">
+          <Card sx={{ maxWidth: 345 }} className="card1">
+            <CardActionArea onClick={() => router("/video-calling")}>
+              <CardMedia
+                component="img"
+                height="170"
+                image="https://cdn.prod.website-files.com/63d54e89026df83dc6107edc/67aeb1c26f527087c262b479_MirrorFly%20video.png"
+                alt=""
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Realtime Video Calling
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Experience seamless, high-quality video calls with your friends and family. Connect instantly and enjoy real-time conversations from anywhere in the world.
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+
+          <Card sx={{ maxWidth: 345 }} className="card2">
+            <CardActionArea onClick={() => router("/connect-chat")}>
+              <CardMedia
+                component="img"
+                height="170"
+                image="https://media.istockphoto.com/id/2139639798/photo/human-hand-using-smartphone-typing-live-chat-chatting-and-social-network-concepts-chatting.jpg?s=612x612&w=0&k=20&c=Lj8OdAFe2gvqtmR-Ik-7EeEHdAmK9TRYPA5Csbuqp0Q="
+                alt=""
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Connect & Chat
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Stay connected through instant messaging. Share updates, photos, and more with your loved ones in a secure and private chat environment.
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+
+          <Card sx={{ maxWidth: 345 }} className="card3">
+            <CardActionArea onClick={() => router("/squeezing-distances")}>
+              <CardMedia
+                component="img"
+                height="170"
+                image="https://thumbs.dreamstime.com/b/online-dating-app-concept-man-woman-meeting-social-network-virtual-love-long-distance-relationship-vector-illustration-202754350.jpg"
+                alt=""
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Squeezing the Distances
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Bridge the gap between you and your loved ones. Our platform helps you maintain strong relationships, no matter the distance.
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </div>
+        
+        
+        
+
+
+
+
+
+
+
+        {/* <div>
           <Card sx={{ maxWidth: 345 }} className="card1">
             <CardActionArea>
               <CardMedia
@@ -80,10 +161,6 @@ export default function LandingPage() {
                 <Typography gutterBottom variant="h5" component="div">
                   Realtime Video Calling
                 </Typography>
-                {/* <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Lizards are a widespread group of squamate reptiles, with over
-                  6,000 species, ranging across all continents except Antarctica
-                </Typography> */}
               </CardContent>
             </CardActionArea>
           </Card>
@@ -100,10 +177,6 @@ export default function LandingPage() {
                 <Typography gutterBottom variant="h5" component="div">
                   Connect & Chat
                 </Typography>
-                {/* <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Lizards are a widespread group of squamate reptiles, with over
-                  6,000 species, ranging across all continents except Antarctica
-                </Typography> */}
               </CardContent>
             </CardActionArea>
           </Card>
@@ -118,16 +191,21 @@ export default function LandingPage() {
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Squeezing the distances
+                  Squeezing the Distances
                 </Typography>
-                {/* <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Lizards are a widespread group of squamate reptiles, with over
-                  6,000 species, ranging across all continents except Antarctica
-                </Typography> */}
               </CardContent>
             </CardActionArea>
           </Card>
-        </div>
+        </div> */}
+
+
+
+
+
+
+
+
+
       </div>
     </div>
   );

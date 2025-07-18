@@ -10,23 +10,12 @@
   position: relative;
   top: 5vh;
   left: 2vw;
-  width: 38vw; 
+  width: 38vw;
   height: 22vh;
   border-radius: 20px;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   border: 2px solid #fff;
   transition: box-shadow 0.3s;
-}
-
-
-.videoPlaceholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #bdbdbd;
-  font-size: 2rem;
-  background: #222;
- 
 }
 
 
@@ -63,11 +52,16 @@
 
 .conferenceView {
   display: flex;
-  padding: 20px 10px 10px 10px;
+  flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
   align-items: flex-start;
+  width: 100%;
+  padding: 20px 10px 10px 10px;
 }
+
+
+
 
 .conferenceView video {
   width: 38vw;
@@ -83,6 +77,34 @@
 
 .conferenceView video:hover {
   box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.3);
+}
+
+
+.meetUserVideo,
+.conferenceView video,
+.videoPlaceholder {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  border: 2px solid #fff;
+  background: #222;
+  object-fit: cover;
+  transition: box-shadow 0.3s;
+  display: block;
+  margin: 0 auto;
+}
+
+
+.videoPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bdbdbd;
+  font-size: 2rem;
+  background: #222;
 }
 
 .chatRoom {
@@ -186,6 +208,20 @@
   transform: scaleX(-1);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Responsive styles for mobile devices */
 @media (max-width: 768px) {
   .meetVideoContainer {
@@ -274,30 +310,18 @@
   }
 }
 
-/* Extra small devices */
-@media (max-width: 480px) {
-  .meetUserVideo {
-    height: 14vh;
-    left: 2vw;
-    bottom: 6vh;
-  }
 
-  .conferenceView video {
-    height: 18vh;
-  }
 
-  .chatRoom {
-    height: 55vh;
-    padding-inline: 4px;
-    border-radius: 18px 18px 0 0;
-    padding-bottom: 70px; /* Space for button bar */
-  }
 
-  .chatRoomHidden {
-    display: none !important;
-  }
 
-  .localVideoMirror {
-    transform: scaleX(-1);
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
