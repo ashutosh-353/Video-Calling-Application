@@ -628,6 +628,7 @@ export default function VideoMeetComponent() {
             {videos.map((video) => (
               <div key={video.socketId}>
                 <video
+                  className={styles.meetUserVideo}
                   data-socket={video.socketId}
                   ref={(ref) => {
                     if (ref && video.stream) {
