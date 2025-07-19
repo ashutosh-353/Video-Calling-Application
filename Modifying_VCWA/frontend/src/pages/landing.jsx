@@ -66,20 +66,6 @@ export default function LandingPage() {
           </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {/* Testing */}
         <div className="cardGrid">
           <Card sx={{ maxWidth: 345 }} className="card1">
             <CardActionArea onClick={() => router("/video-calling")}>
@@ -94,7 +80,8 @@ export default function LandingPage() {
                   Realtime Video Calling
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Experience seamless, high-quality video calls with your friends and family. Connect instantly and enjoy real-time conversations from anywhere in the world.
+                  Experience seamless, high-quality video calls with your
+                  friends and family.
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -113,7 +100,7 @@ export default function LandingPage() {
                   Connect & Chat
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Stay connected through instant messaging. Share updates, photos, and more with your loved ones in a secure and private chat environment.
+                  Enhanced connectivity through instant messaging.
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -132,80 +119,12 @@ export default function LandingPage() {
                   Squeezing the Distances
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Bridge the gap between you and your loved ones. Our platform helps you maintain strong relationships, no matter the distance.
+                  Bridge the gap between you and your loved ones.
                 </Typography>
               </CardContent>
             </CardActionArea>
           </Card>
         </div>
-        
-        
-        
-
-
-
-
-
-
-
-        {/* <div>
-          <Card sx={{ maxWidth: 345 }} className="card1">
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="170"
-                image="https://cdn.prod.website-files.com/63d54e89026df83dc6107edc/67aeb1c26f527087c262b479_MirrorFly%20video.png"
-                alt=""
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Realtime Video Calling
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-
-          <Card sx={{ maxWidth: 345 }} className="card2">
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="170"
-                image="https://media.istockphoto.com/id/2139639798/photo/human-hand-using-smartphone-typing-live-chat-chatting-and-social-network-concepts-chatting.jpg?s=612x612&w=0&k=20&c=Lj8OdAFe2gvqtmR-Ik-7EeEHdAmK9TRYPA5Csbuqp0Q="
-                alt=""
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Connect & Chat
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-
-          <Card sx={{ maxWidth: 345 }} className="card3">
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="170"
-                image="https://thumbs.dreamstime.com/b/online-dating-app-concept-man-woman-meeting-social-network-virtual-love-long-distance-relationship-vector-illustration-202754350.jpg"
-                alt=""
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Squeezing the Distances
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </div> */}
-
-
-
-
-
-
-
-
-
       </div>
     </div>
   );

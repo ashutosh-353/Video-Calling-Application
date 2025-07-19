@@ -11,6 +11,13 @@ import VideoCalling from "./pages/VideoCalling";
 import ConnectChat from "./pages/ConnectChat";
 import SqueezingDistances from "./pages/SqueezingDistances";
 
+
+
+
+
+
+
+
 function App() {
   return (
     <div className="App">
@@ -29,6 +36,9 @@ function App() {
             <Route path="/connect-chat" element={<ConnectChat/>}/>
             <Route path="/squeezing-distances" element={<SqueezingDistances/>}/>
 
+
+
+            
           </Routes>
         </AuthProvider>
       </Router>
