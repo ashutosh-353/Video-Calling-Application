@@ -618,7 +618,7 @@ export default function VideoMeetComponent() {
 
           <div className={styles.meetVideoContainer}>
             {/* --- Main pinned video (local user) --- */}
-            <div className={styles.mainVideoWrapper}>
+            <div className={`${styles.mainVideoWrapper} ${styles.localVideoMirror}`}>
               {hasLiveVideoStream(window.localStream) ? (
                 <video
                   ref={localVideoref}

@@ -1,46 +1,59 @@
 .meetVideoContainer {
   display: flex;
   flex-direction: column;
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  height: 100vh !important;
-  width: 100vw !important;
-  overflow-y: auto !important; /* Parent scrolls everything together */
-  gap: 15px;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto; /* Scroll parent, not individual children */
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* === Pinned Main Video === */
+.mainVideoWrapper {
+  position: sticky; /* Stays visible at top */
+  top: 0;
+  z-index: 10;
+  padding: 8px 0;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .meetUserVideo {
-  width: 100% !important;
+  display: block;
+  margin: 0 auto;
+  width: 100%;
   max-width: 480px;
   aspect-ratio: 16/9;
-  margin: 10px auto;
-  border-radius: 15px !important;
-  border: none !important;
-  box-shadow: none !important;
+  border-radius: 15px;
+  border: 2px solid #fff;
   object-fit: cover;
-  display: block;
+  background: #222;
 }
 
 .videoPlaceholder {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  aspect-ratio: 16/9;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.2rem;
   color: #bdbdbd;
-  font-size: 2rem;
   background: #222;
+  border-radius: 15px;
+  border: 2px solid #fff;
+  margin: 0 auto;
 }
 
 .conferenceView {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 15px;
+  gap: 12px; /* small consistent gap between videos */
   justify-items: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 10px;
+  align-items: start;
+  padding: 12px;
 }
 
 .conferenceView video {
@@ -53,11 +66,10 @@
   background: #222;
   object-fit: cover;
   transition: box-shadow 0.3s;
-  display: block;
 }
 
 .conferenceView video:hover {
-  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.3);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3);
 }
 
 .buttonContainers {
@@ -198,7 +210,6 @@
 
 
 
-
 /* Responsive styles for mobile devices */
 @media (max-width: 768px) {
   .meetVideoContainer {
@@ -228,12 +239,7 @@
   }
 
   .conferenceView {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    justify-items: center;
-    align-items: center;
-    width: 100%;
-    padding: 10px;
+    grid-template-columns: 1fr;
   }
 
   .conferenceView video {
