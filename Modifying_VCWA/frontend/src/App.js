@@ -14,10 +14,6 @@ import SqueezingDistances from "./pages/SqueezingDistances";
 
 
 
-
-
-
-
 function App() {
   return (
     <div className="App">

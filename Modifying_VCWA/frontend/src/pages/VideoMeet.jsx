@@ -183,9 +183,9 @@ export default function VideoMeetComponent() {
             console.log(e);
           }
 
-          let blackSilence = (...args) =>
-            new MediaStream([black(...args), silence()]);
-          window.localStream = blackSilence();
+          // let blackSilence = (...args) =>
+          //   new MediaStream([black(...args), silence()]);
+          // window.localStream = blackSilence();
           localVideoref.current.srcObject = window.localStream;
 
           for (let id in connections) {
@@ -265,9 +265,9 @@ export default function VideoMeetComponent() {
             console.log(e);
           }
 
-          let blackSilence = (...args) =>
-            new MediaStream([black(...args), silence()]);
-          window.localStream = blackSilence();
+          // let blackSilence = (...args) =>
+          //   new MediaStream([black(...args), silence()]);
+          // window.localStream = blackSilence();
           localVideoref.current.srcObject = window.localStream;
 
           getUserMedia();
@@ -389,9 +389,9 @@ export default function VideoMeetComponent() {
           if (window.localStream !== undefined && window.localStream !== null) {
             connections[socketListId].addStream(window.localStream);
           } else {
-            let blackSilence = (...args) =>
-              new MediaStream([black(...args), silence()]);
-            window.localStream = blackSilence();
+            // let blackSilence = (...args) =>
+            //   new MediaStream([black(...args), silence()]);
+            // window.localStream = blackSilence();
             connections[socketListId].addStream(window.localStream);
           }
         });
@@ -511,6 +511,13 @@ export default function VideoMeetComponent() {
     getMedia();
   };
 
+  const hasLiveVideoStream = (stream) => {
+  if (!stream) return false;
+  const tracks = stream.getVideoTracks();
+  return tracks.length > 0 && tracks.some(track => track.readyState === 'live' && track.enabled);
+};
+
+
   return (
     <div>
       {askForUsername === true ? (
@@ -609,36 +616,43 @@ export default function VideoMeetComponent() {
             </IconButton>
           </div>
 
-          {video ? (
-            <video
-              className={`${styles.meetUserVideo} ${styles.localVideoMirror}`}
-              ref={localVideoref}
-              autoPlay
-              muted
-            ></video>
-          ) : (
-            <div
-              className={`${styles.meetUserVideo} ${styles.videoPlaceholder} ${styles.localVideoMirror}`}
-            >
-              <FontAwesomeIcon icon={faUser} size="4x" color="#bdbdbd" />
-            </div>
-          )}
-
-          <div className={styles.conferenceView}>
-            {videos.map((video) => (
-              <div key={video.socketId}>
+          <div className={styles.meetVideoContainer}>
+            {/* --- Main pinned video (local user) --- */}
+            <div className={styles.mainVideoWrapper}>
+              {hasLiveVideoStream(window.localStream) ? (
                 <video
-                  className={styles.meetUserVideo}
-                  data-socket={video.socketId}
-                  ref={(ref) => {
-                    if (ref && video.stream) {
-                      ref.srcObject = video.stream;
-                    }
-                  }}
+                  ref={localVideoref}
                   autoPlay
-                ></video>
-              </div>
-            ))}
+                  muted
+                  className={styles.meetUserVideo}
+                  playsInline
+                />
+              ) : (
+                <div
+                  className={styles.videoPlaceholder}
+                >
+                  <FontAwesomeIcon icon={faUser} size="4x" color="#bdbdbd" />
+                </div>
+              )}
+            </div>
+
+            {/* --- All other participants in grid view --- */}
+            <div className={styles.conferenceView}>
+              {videos
+                .filter((videoItem) => hasLiveVideoStream(videoItem.stream))
+                .map((videoItem) => (
+                  <video
+                    key={videoItem.socketId}
+                    ref={(ref) => {
+                      if (ref && videoItem.stream) {
+                        ref.srcObject = videoItem.stream;
+                      }
+                    }}
+                    autoPlay
+                    playsInline
+                  />
+                ))}
+            </div>
           </div>
         </div>
       )}
