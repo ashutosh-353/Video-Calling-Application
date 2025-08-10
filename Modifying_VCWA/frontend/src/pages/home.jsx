@@ -57,7 +57,7 @@ function HomeComponent() {
       >
         <Box sx={{ display: "flex", alignItems: "center"}}>
           <img
-            src="/video_full_logo.gif"
+            src="/generated-image.png"
             alt="Logo"
             style={{
               height: isMobile ? 32 : 48,
