@@ -14,6 +14,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import server from "../environment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import Lobby from "./Lobby";
 
 const server_url = server;
 
@@ -557,29 +558,8 @@ export default function VideoMeetComponent() {
 
   return (
     <div>
-      {askForUsername === true ? (
-        <div>
-          <h2>Enter into Lobby </h2>
-          <TextField
-            id="outlined-basic"
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            variant="outlined"
-          />
-          <Button variant="contained" onClick={connect}>
-            Connect
-          </Button>
-
-          <div>
-            <video
-              className={`${styles.meetUserVideo} ${styles.localVideoMirror}`}
-              ref={localVideoref}
-              autoPlay
-              muted
-            ></video>
-          </div>
-        </div>
+      {askForUsername ? (
+        <Lobby onConnect={connect} />
       ) : (
         <div className={styles.meetVideoContainer}>
           {showModal ? (
