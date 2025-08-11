@@ -63,6 +63,20 @@ export default function VideoMeetComponent() {
   // if(isChrome() === false) {
 
   // }
+  const stopLocalMedia = () => {
+    try {
+      if (localVideoref.current?.srcObject) {
+        localVideoref.current.srcObject.getTracks().forEach((t) => t.stop());
+        localVideoref.current.srcObject = null;
+      }
+      if (window.localStream) {
+        window.localStream.getTracks().forEach((t) => t.stop());
+        window.localStream = null;
+      }
+    } catch (err) {
+      console.error("Error while stopping media tracks", err);
+    }
+  };
 
   useEffect(() => {
     console.log("HELLO");
@@ -455,6 +469,7 @@ export default function VideoMeetComponent() {
     // setVideo(!video);
     // // getUserMedia();
   };
+
   let handleAudio = () => {
     setAudio(!audio);
     // getUserMedia();
@@ -470,11 +485,31 @@ export default function VideoMeetComponent() {
   };
 
   let handleEndCall = () => {
+    stopLocalMedia();
+
+    // Gracefully close every RTCPeerConnection
+    Object.values(connections).forEach((pc) => {
+      try {
+        pc.close();
+      } catch (_) {}
+    });
+    connections = {};
+
+    // Close socket.io connection if it exists
     try {
-      let tracks = localVideoref.current.srcObject.getTracks();
-      tracks.forEach((track) => track.stop());
-    } catch (e) {}
-    window.location.href = "/";
+      socketRef.current?.disconnect();
+    } catch (_) {}
+
+    // Check CURRENT authentication status (not initial state)
+    const currentToken = localStorage.getItem("token");
+
+    if (currentToken) {
+      // User is currently authenticated - go to home
+      window.location.href = "/home";
+    } else {
+      // User is not authenticated (guest) - go to landing page
+      window.location.href = "/";
+    }
   };
 
   let openChat = () => {
@@ -512,11 +547,13 @@ export default function VideoMeetComponent() {
   };
 
   const hasLiveVideoStream = (stream) => {
-  if (!stream) return false;
-  const tracks = stream.getVideoTracks();
-  return tracks.length > 0 && tracks.some(track => track.readyState === 'live' && track.enabled);
-};
-
+    if (!stream) return false;
+    const tracks = stream.getVideoTracks();
+    return (
+      tracks.length > 0 &&
+      tracks.some((track) => track.readyState === "live" && track.enabled)
+    );
+  };
 
   return (
     <div>
@@ -618,7 +655,9 @@ export default function VideoMeetComponent() {
 
           <div className={styles.meetVideoContainer}>
             {/* --- Main pinned video (local user) --- */}
-            <div className={`${styles.mainVideoWrapper} ${styles.localVideoMirror}`}>
+            <div
+              className={`${styles.mainVideoWrapper} ${styles.localVideoMirror}`}
+            >
               {hasLiveVideoStream(window.localStream) ? (
                 <video
                   ref={localVideoref}
@@ -628,9 +667,7 @@ export default function VideoMeetComponent() {
                   playsInline
                 />
               ) : (
-                <div
-                  className={styles.videoPlaceholder}
-                >
+                <div className={styles.videoPlaceholder}>
                   <FontAwesomeIcon icon={faUser} size="4x" color="#bdbdbd" />
                 </div>
               )}

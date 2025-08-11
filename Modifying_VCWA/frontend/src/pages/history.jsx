@@ -95,7 +95,7 @@ export default function History() {
             startIcon={<LogoutIcon />}
             onClick={() => {
               localStorage.removeItem("token");
-              routeTo("/auth");
+              routeTo("/");
             }}
             sx={{
               fontWeight: 500,

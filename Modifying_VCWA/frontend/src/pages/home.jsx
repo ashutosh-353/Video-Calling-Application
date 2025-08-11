@@ -119,7 +119,7 @@ function HomeComponent() {
             startIcon={<LogoutIcon />}
             onClick={() => {
               localStorage.removeItem("token");
-              navigate("/auth");
+              navigate("/");
             }}
             sx={{
               fontWeight: 500,
