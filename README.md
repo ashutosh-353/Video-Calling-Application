@@ -1,3 +1,4 @@
 # Video-Calling-Application
 Full Stack Video Calling App                                   
-Connect with Duo <--> Trio       
+Connect with Duo🫂 
+Connect with Trio💕     
