@@ -84,14 +84,16 @@ export default function VideoMeetComponent() {
     getPermissions();
   });
 
-  let getDislayMedia = () => {
+  let getDisplayMedia = () => {
     if (screen) {
       if (navigator.mediaDevices.getDisplayMedia) {
         navigator.mediaDevices
           .getDisplayMedia({ video: true, audio: true })
-          .then(getDislayMediaSuccess)
-          .then((stream) => {})
-          .catch((e) => console.log(e));
+          .then(getDisplayMediaSuccess)
+          .catch((e) => {
+            setScreen(false); // reset icon if cancelled
+            console.log(e);
+          });
       }
     }
   };
@@ -238,7 +240,7 @@ export default function VideoMeetComponent() {
     }
   };
 
-  let getDislayMediaSuccess = (stream) => {
+  let getDisplayMediaSuccess = (stream) => {
     console.log("HERE");
     try {
       window.localStream.getTracks().forEach((track) => track.stop());
@@ -458,6 +460,7 @@ export default function VideoMeetComponent() {
   let handleVideo = () => {
     setVideo((prev) => {
       const newVideo = !prev;
+      // Enable/disable camera track
       if (localVideoref.current && localVideoref.current.srcObject) {
         const tracks = localVideoref.current.srcObject.getVideoTracks();
         tracks.forEach((track) => {
@@ -466,19 +469,20 @@ export default function VideoMeetComponent() {
       }
       return newVideo;
     });
-
-    // setVideo(!video);
-    // // getUserMedia();
   };
 
   let handleAudio = () => {
     setAudio(!audio);
-    // getUserMedia();
+    // Optionally, enable/disable audio tracks here if necessary
+    if (localVideoref.current && localVideoref.current.srcObject) {
+      const tracks = localVideoref.current.srcObject.getAudioTracks();
+      tracks.forEach((track) => (track.enabled = !audio));
+    }
   };
 
   useEffect(() => {
     if (screen !== undefined) {
-      getDislayMedia();
+      getDisplayMedia();
     }
   }, [screen]);
   let handleScreen = () => {
@@ -617,12 +621,8 @@ export default function VideoMeetComponent() {
             </IconButton>
 
             {screenAvailable === true ? (
-              <IconButton onClick={handleScreen} style={{ color: "white" }}>
-                {screen === true ? (
-                  <ScreenShareIcon />
-                ) : (
-                  <StopScreenShareIcon />
-                )}
+              <IconButton onClick={handleScreen} color="primary">
+                {screen ? <ScreenShareIcon/> : <StopScreenShareIcon />}
               </IconButton>
             ) : (
               <></>
@@ -638,13 +638,13 @@ export default function VideoMeetComponent() {
             <div
               className={`${styles.mainVideoWrapper} ${styles.localVideoMirror}`}
             >
-              {hasLiveVideoStream(window.localStream) ? (
+              {video && videoAvailable && window.localStream ? (
                 <video
                   ref={localVideoref}
                   autoPlay
-                  muted
-                  className={styles.meetUserVideo}
                   playsInline
+                  muted
+                  className={styles.meetUserVideo} // or your existing style
                 />
               ) : (
                 <div className={styles.videoPlaceholder}>
