@@ -28,13 +28,13 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/:url" element={<VideoMeetComponent />} />
 
-            <Route path="/video-calling" element={<VideoCalling/>}/>
-            <Route path="/connect-chat" element={<ConnectChat/>}/>
-            <Route path="/squeezing-distances" element={<SqueezingDistances/>}/>
+            <Route path="/video-calling" element={<VideoCalling />} />
+            <Route path="/connect-chat" element={<ConnectChat />} />
+            <Route path="/squeezing-distances" element={<SqueezingDistances />} />
 
 
 
-            
+
           </Routes>
         </AuthProvider>
       </Router>

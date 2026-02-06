@@ -39,26 +39,30 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.landingPageContainer nav .navList > * {
+.landingPageContainer nav .navList>* {
   opacity: 0;
   animation: navListFadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-.landingPageContainer nav .navList > *:nth-child(1) {
+.landingPageContainer nav .navList>*:nth-child(1) {
   animation-delay: 0.2s;
 }
-.landingPageContainer nav .navList > *:nth-child(2) {
+
+.landingPageContainer nav .navList>*:nth-child(2) {
   animation-delay: 0.4s;
 }
-.landingPageContainer nav .navList > *:nth-child(3) {
+
+.landingPageContainer nav .navList>*:nth-child(3) {
   animation-delay: 0.6s;
 }
+
 /* Add more nth-child rules if you have more nav items */
 
 /* Underline effect for navList */
@@ -128,7 +132,7 @@
   bottom: 4.375rem;
 }
 
-.landingMainContainer > div:nth-child(1) {
+.landingMainContainer>div:nth-child(1) {
   position: relative;
   bottom: 3.125rem;
 }
@@ -138,13 +142,14 @@
     opacity: 0;
     transform: translateX(-3.75rem) scale(0.96);
   }
+
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
   }
 }
 
-.landingMainContainer > div:nth-child(1) {
+.landingMainContainer>div:nth-child(1) {
   animation: fadeInLeft 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   opacity: 0;
 }
@@ -159,19 +164,19 @@
   animation: floatY 3.5s ease-in-out infinite;
 } */
 
-.landingMainContainer > div:nth-child(1) h1 {
+.landingMainContainer>div:nth-child(1) h1 {
   font-size: 3.5rem;
   width: auto;
   max-width: 37.5rem;
 }
 
-.landingMainContainer > div:nth-child(1) p {
+.landingMainContainer>div:nth-child(1) p {
   font-size: 1.6rem;
   width: 40vw;
   margin-top: 1.2rem;
 }
 
-.landingMainContainer > div:nth-child(1) div[role="button"] {
+.landingMainContainer>div:nth-child(1) div[role="button"] {
   background: #d97500;
   width: fit-content;
   padding: 1rem;
@@ -182,7 +187,7 @@
   font-size: 1.3rem;
 }
 
-.landingMainContainer > div:nth-child(1) div[role="button"] {
+.landingMainContainer>div:nth-child(1) div[role="button"] {
   background: linear-gradient(90deg, #d97500 60%, #ffb347 100%);
   width: fit-content;
   padding: 0.7rem;
@@ -200,8 +205,8 @@
     box-shadow 0.18s cubic-bezier(0.23, 1, 0.32, 1), letter-spacing 0.18s;
 }
 
-.landingMainContainer > div:nth-child(1) div[role="button"]:hover,
-.landingMainContainer > div:nth-child(1) div[role="button"]:focus {
+.landingMainContainer>div:nth-child(1) div[role="button"]:hover,
+.landingMainContainer>div:nth-child(1) div[role="button"]:focus {
   background: linear-gradient(90deg, #ffb347 0%, #d97500 100%);
   transform: scale(1.06) translateY(-0.125rem);
   box-shadow: 0 0.5rem 2rem 0 rgba(217, 117, 0, 0.22),
@@ -210,12 +215,12 @@
   outline: none;
 }
 
-.landingMainContainer > div:nth-child(1) div[role="button"]:active {
+.landingMainContainer>div:nth-child(1) div[role="button"]:active {
   transform: scale(0.98);
   box-shadow: 0 0.125rem 0.5rem 0 rgba(217, 117, 0, 0.1);
 }
 
-.landingMainContainer > div:nth-child(2) {
+.landingMainContainer>div:nth-child(2) {
   height: 85vh;
   width: 100%;
   max-width: 37.5rem;
@@ -227,7 +232,7 @@
   bottom: 0.625rem;
 }
 
-.landingMainContainer > div:nth-child(2) .card1 {
+.landingMainContainer>div:nth-child(2) .card1 {
   height: 53.75rem;
   width: 100%;
   position: relative;
@@ -236,7 +241,7 @@
   border-top-left-radius: 1.5625rem;
 }
 
-.landingMainContainer > div:nth-child(2) .card2 {
+.landingMainContainer>div:nth-child(2) .card2 {
   height: 53.75rem;
   width: 100%;
   position: relative;
@@ -244,7 +249,7 @@
   border-radius: 15% 10% 15% 0%;
 }
 
-.landingMainContainer > div:nth-child(2) .card3 {
+.landingMainContainer>div:nth-child(2) .card3 {
   height: 53.75rem;
   width: 100%;
   position: relative;
@@ -254,7 +259,7 @@
 }
 
 /* Transparent background and white text for card content */
-.landingMainContainer > div:nth-child(2) .MuiCardContent-root {
+.landingMainContainer>div:nth-child(2) .MuiCardContent-root {
   background: transparent !important;
   color: black !important;
   position: relative;
@@ -267,6 +272,7 @@
     opacity: 0;
     transform: translateY(2.5rem) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -274,42 +280,44 @@
 }
 
 /* Apply animation to all cards */
-.landingMainContainer > div:nth-child(2) .card1,
-.landingMainContainer > div:nth-child(2) .card2,
-.landingMainContainer > div:nth-child(2) .card3 {
+.landingMainContainer>div:nth-child(2) .card1,
+.landingMainContainer>div:nth-child(2) .card2,
+.landingMainContainer>div:nth-child(2) .card3 {
   animation: cardFadeIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   opacity: 0;
 }
 
 /* Stagger the animation for each card */
-.landingMainContainer > div:nth-child(2) .card1 {
+.landingMainContainer>div:nth-child(2) .card1 {
   animation-delay: 0.1s;
 }
-.landingMainContainer > div:nth-child(2) .card2 {
+
+.landingMainContainer>div:nth-child(2) .card2 {
   animation-delay: 0.3s;
 }
-.landingMainContainer > div:nth-child(2) .card3 {
+
+.landingMainContainer>div:nth-child(2) .card3 {
   animation-delay: 0.5s;
 }
 
 /* Show cards after animation */
-.landingMainContainer > div:nth-child(2) .card1,
-.landingMainContainer > div:nth-child(2) .card2,
-.landingMainContainer > div:nth-child(2) .card3 {
+.landingMainContainer>div:nth-child(2) .card1,
+.landingMainContainer>div:nth-child(2) .card2,
+.landingMainContainer>div:nth-child(2) .card3 {
   will-change: transform, opacity;
 }
 
 /* Hover effect for interactivity */
-.landingMainContainer > div:nth-child(2) .card1:hover,
-.landingMainContainer > div:nth-child(2) .card2:hover,
-.landingMainContainer > div:nth-child(2) .card3:hover {
+.landingMainContainer>div:nth-child(2) .card1:hover,
+.landingMainContainer>div:nth-child(2) .card2:hover,
+.landingMainContainer>div:nth-child(2) .card3:hover {
   transform: scale(1.04) translateY(-0.5rem);
   box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.18),
     0 0.09375rem 0.5rem 0 rgba(0, 0, 0, 0.12);
   transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s;
 }
 
-.landingMainContainer > div:nth-child(2) .MuiCardContent-root > * {
+.landingMainContainer>div:nth-child(2) .MuiCardContent-root>* {
   color: #23272f;
 }
 
@@ -318,6 +326,7 @@
     opacity: 0;
     transform: translateX(-2.5rem);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -325,19 +334,21 @@
 }
 
 /* Animate all text inside card content */
-.landingMainContainer > div:nth-child(2) .MuiCardContent-root > * {
+.landingMainContainer>div:nth-child(2) .MuiCardContent-root>* {
   opacity: 0;
   animation: textFadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 /* Stagger the animation for heading and paragraph for each card */
-.landingMainContainer > div:nth-child(2) .card1 .MuiCardContent-root > * {
+.landingMainContainer>div:nth-child(2) .card1 .MuiCardContent-root>* {
   animation-delay: 0.3s;
 }
-.landingMainContainer > div:nth-child(2) .card2 .MuiCardContent-root > * {
+
+.landingMainContainer>div:nth-child(2) .card2 .MuiCardContent-root>* {
   animation-delay: 0.5s;
 }
-.landingMainContainer > div:nth-child(2) .card3 .MuiCardContent-root > * {
+
+.landingMainContainer>div:nth-child(2) .card3 .MuiCardContent-root>* {
   animation-delay: 0.7s;
 }
 
@@ -348,6 +359,7 @@
   padding-inline: 1.25rem;
   text-align: center;
 }
+
 .meetContainer {
   display: flex;
   padding-inline: 1.25rem;
@@ -367,7 +379,7 @@
   align-items: center;
 }
 
-.rightPanel > img {
+.rightPanel>img {
   width: 30vw;
   height: auto;
   border-radius: 1.25rem;
@@ -383,6 +395,7 @@
   transition: opacity 0.4s;
   opacity: 1;
 }
+
 .auth-form-fade.hide {
   opacity: 0;
   pointer-events: none;
@@ -461,26 +474,30 @@
       opacity: 0;
       transform: translateY(1.875rem);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  .landingPageContainer nav .navList > * {
+  .landingPageContainer nav .navList>* {
     opacity: 0;
     animation: navListFadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
 
-  .landingPageContainer nav .navList > *:nth-child(1) {
+  .landingPageContainer nav .navList>*:nth-child(1) {
     animation-delay: 0.2s;
   }
-  .landingPageContainer nav .navList > *:nth-child(2) {
+
+  .landingPageContainer nav .navList>*:nth-child(2) {
     animation-delay: 0.4s;
   }
-  .landingPageContainer nav .navList > *:nth-child(3) {
+
+  .landingPageContainer nav .navList>*:nth-child(3) {
     animation-delay: 0.6s;
   }
+
   /* Add more nth-child rules if you have more nav items */
 
   .landingMainContainer {
@@ -492,7 +509,7 @@
     gap: 2rem;
   }
 
-  .landingMainContainer > div:nth-child(1) {
+  .landingMainContainer>div:nth-child(1) {
     display: flex;
     bottom: 0;
     flex-direction: column;
@@ -502,36 +519,36 @@
     padding-top: 1.25rem;
   }
 
-  .landingMainContainer > div:nth-child(1) h1 {
+  .landingMainContainer>div:nth-child(1) h1 {
     font-size: 2rem;
     max-width: 90%;
     width: auto;
     word-break: break-word;
   }
 
-  .landingMainContainer > div:nth-child(1) p {
+  .landingMainContainer>div:nth-child(1) p {
     font-size: 1.1rem;
     max-width: 90%;
     width: auto;
     margin-top: 0.8rem;
   }
 
-  .landingMainContainer > div:nth-child(1) div[role="button"] {
+  .landingMainContainer>div:nth-child(1) div[role="button"] {
     font-size: 1rem;
     padding: 0.6rem 1.2rem;
     margin-top: 1.2rem;
   }
 
-  .landingMainContainer > div:nth-child(2) {
+  .landingMainContainer>div:nth-child(2) {
     max-width: 100%;
     height: auto;
     gap: 1.2rem;
     bottom: 0;
   }
 
-  .landingMainContainer > div:nth-child(2) .card1,
-  .landingMainContainer > div:nth-child(2) .card2,
-  .landingMainContainer > div:nth-child(2) .card3 {
+  .landingMainContainer>div:nth-child(2) .card1,
+  .landingMainContainer>div:nth-child(2) .card2,
+  .landingMainContainer>div:nth-child(2) .card3 {
     height: auto;
     min-height: 12rem;
     width: 100%;
@@ -541,7 +558,7 @@
     border-radius: 1rem !important;
   }
 
-  .landingMainContainer > div:nth-child(2) .MuiCardContent-root {
+  .landingMainContainer>div:nth-child(2) .MuiCardContent-root {
     padding: 0.8rem !important;
     font-size: 1rem;
     bottom: 0;
@@ -555,7 +572,7 @@
     gap: 1.2rem;
   }
 
-  .rightPanel > img {
+  .rightPanel>img {
     width: 90vw;
     max-width: 100%;
     border-radius: 0.75rem;
@@ -571,13 +588,16 @@
     0% {
       transform: scale(1);
     }
+
     50% {
       transform: scale(1.08);
     }
+
     100% {
       transform: scale(1);
     }
   }
+
   .auth-animated-btn:active {
     animation: buttonPop 0.2s;
   }
@@ -586,25 +606,27 @@
     transition: opacity 0.4s;
     opacity: 1;
   }
+
   .auth-form-fade.hide {
     opacity: 0;
     pointer-events: none;
     position: absolute;
   }
 
-  .meetContainer, .navBar {
-  animation: fadeIn 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  .meetContainer,
+  .navBar {
+    animation: fadeIn 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-}
-
-
-
-
-
-
-
-
