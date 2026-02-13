@@ -127,9 +127,10 @@ export default function Authentication() {
               <LockOutlinedIcon />
             </Avatar>
 
-            <div>
+            <div style={{ width: '100%', maxWidth: '400px', display: 'flex', gap: '10px', marginBottom: '10px' }}>
               <Button
-                variant={formState === 0 ? "contained" : ""}
+                fullWidth
+                variant={formState === 0 ? "contained" : "outlined"}
                 onClick={() => {
                   setFormState(0);
                 }}
@@ -137,7 +138,8 @@ export default function Authentication() {
                 Sign In
               </Button>
               <Button
-                variant={formState === 1 ? "contained" : ""}
+                fullWidth
+                variant={formState === 1 ? "contained" : "outlined"}
                 onClick={() => {
                   setFormState(1);
                 }}
@@ -150,13 +152,19 @@ export default function Authentication() {
               <GoogleLogin
                 onSuccess={googleSuccess}
                 onError={googleFailure}
+                type="standard"
+                theme="filled_blue"
+                size="large"
+                text="signin_with"
+                shape="rectangular"
+                width="300" // Explicit width to match form fields
               />
             </Box>
 
             <Box
               component="form"
               noValidate
-              sx={{ mt: 1, position: "relative" }}
+              sx={{ mt: 1, position: "relative", width: '100%', maxWidth: '400px' }}
               className={`auth-form-fade`}
               onSubmit={(e) => {
                 e.preventDefault();

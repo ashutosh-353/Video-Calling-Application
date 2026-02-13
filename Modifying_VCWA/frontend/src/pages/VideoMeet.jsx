@@ -609,9 +609,15 @@ export default function VideoMeetComponent() {
     // Clear previous error
     setUsernameError("");
 
-    const isValid = /^[a-zA-Z0-9]+$/.test(username);
-    if (!username || !isValid) {
-      setUsernameError("Please enter a valid username (Alphanumeric only, no spaces).");
+    const isValid = /^[a-zA-Z][a-zA-Z0-9\s_]*$/.test(username);
+
+    if (!username) {
+      setUsernameError("Username is required.");
+      return;
+    }
+
+    if (!isValid) {
+      setUsernameError("Username must start with a letter and can only contain letters, numbers, underscores, and spaces.");
       return;
     }
     setAskForUsername(false);
