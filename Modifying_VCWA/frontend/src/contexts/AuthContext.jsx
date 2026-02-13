@@ -58,6 +58,22 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const handleLoginWithGoogle = async (credential, client_id) => {
+        try {
+            let request = await client.post("/login_with_google", {
+                credential: credential,
+                client_id: client_id
+            });
+
+            if (request.status === httpStatus.OK) {
+                localStorage.setItem("token", request.data.token);
+                router("/home")
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
     const getHistoryOfUser = async () => {
         try {
             let request = await client.get("/get_all_activity", {
@@ -67,7 +83,7 @@ export const AuthProvider = ({ children }) => {
             });
             return request.data
         } catch
-         (err) {
+        (err) {
             throw err;
         }
     }
@@ -86,7 +102,7 @@ export const AuthProvider = ({ children }) => {
 
 
     const data = {
-        userData, setUserData, addToUserHistory, getHistoryOfUser, handleRegister, handleLogin
+        userData, setUserData, addToUserHistory, getHistoryOfUser, handleRegister, handleLogin, handleLoginWithGoogle
     }
 
     return (

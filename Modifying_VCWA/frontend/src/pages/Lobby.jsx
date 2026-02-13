@@ -17,26 +17,39 @@ export default function Lobby({ onConnect }) {
 
   // Start / stop camera
   useEffect(() => {
-    if (cameraOn) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          streamRef.current = stream;
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        })
-        .catch((err) => {
-          console.error("Error accessing camera:", err);
+    let mounted = true;
+
+    const startCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (!mounted || !cameraOn) {
+          // If component unmounted or camera was turned off while loading
+          stream.getTracks().forEach((track) => track.stop());
+          return;
+        }
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+        setError(""); // Clear any previous errors
+      } catch (err) {
+        console.error("Error accessing camera:", err);
+        if (mounted) {
           setError("Cannot access camera.");
           setCameraOn(false);
-        });
+        }
+      }
+    };
+
+    if (cameraOn) {
+      startCamera();
     } else {
       stopStream();
     }
 
-    // Stop camera when component unmounts
+    // Cleanup function
     return () => {
+      mounted = false;
       stopStream();
     };
   }, [cameraOn]);

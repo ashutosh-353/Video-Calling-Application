@@ -203,24 +203,45 @@
 }
 
 /* Message Bubbles */
-.chattingDisplay>div {
-  background: rgba(255, 255, 255, 0.08);
+/* Message Bubbles */
+.messageSelf {
+  background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+  align-self: flex-end;
+  text-align: right;
+  border-bottom-right-radius: 2px !important;
+  color: white;
   padding: 10px 14px;
   border-radius: 12px;
-  color: #e0e0e0;
   max-width: 85%;
-  align-self: flex-start;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  margin-bottom: 12px !important;
-  /* Override inline styles */
+  margin-bottom: 12px;
+  box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
 }
 
-.chattingDisplay p:first-child {
+.messageOther {
+  background: rgba(255, 255, 255, 0.08);
+  align-self: flex-start;
+  text-align: left;
+  border-bottom-left-radius: 2px !important;
+  color: #e0e0e0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  max-width: 85%;
+  margin-bottom: 12px;
+}
+
+.msgSender {
   font-weight: 600;
-  font-size: 0.8rem;
-  color: #a0a0a0;
+  font-size: 0.75rem;
   margin-bottom: 4px;
+  opacity: 0.8;
+  color: inherit;
+}
+
+.msgText {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+  margin: 0;
 }
 
 .chattingArea {
@@ -319,7 +340,7 @@
     height: 60vh;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 90px; /* Raised to avoid overlap with bottom controls */
     top: auto;
     border-radius: 24px 24px 0 0;
     animation: slideUp 0.3s ease-out;

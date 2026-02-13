@@ -3,6 +3,7 @@ import { User } from "../models/user.model.js";
 import bcrypt, { hash } from "bcrypt"
 
 import crypto from "crypto"
+import { OAuth2Client } from "google-auth-library";
 import { Meeting } from "../models/meeting.model.js";
 const login = async (req, res) => {
 
@@ -98,4 +99,44 @@ const addToHistory = async (req, res) => {
 }
 
 
-export { login, register, getUserHistory, addToHistory }
+// import { OAuth2Client } is moved to top
+const client = new OAuth2Client();
+
+const loginWithGoogle = async (req, res) => {
+    const { credential, client_id } = req.body;
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: client_id,
+        });
+        const payload = ticket.getPayload();
+        const { email, name, sub } = payload;
+
+        // Use email as username or create a unique one
+        // For simplicity, we'll try to find by email or username = email
+        let user = await User.findOne({ username: email });
+
+        if (!user) {
+            // Create new user
+            user = new User({
+                name: name,
+                username: email,
+                email: email,
+                password: "", // No password for Google Auth users
+            });
+        }
+
+        let token = crypto.randomBytes(20).toString("hex");
+        user.token = token;
+        await user.save();
+
+        return res.status(httpStatus.OK).json({ token: token, username: user.username, name: user.name });
+
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ message: `Google Auth Failed: ${e.message}` });
+    }
+}
+
+export { login, register, getUserHistory, addToHistory, loginWithGoogle }

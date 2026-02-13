@@ -34,9 +34,9 @@ export default function VideoMeetComponent() {
 
   let [audioAvailable, setAudioAvailable] = useState(true);
 
-  let [video, setVideo] = useState([]);
+  let [video, setVideo] = useState(true);
 
-  let [audio, setAudio] = useState();
+  let [audio, setAudio] = useState(true);
 
   let [screen, setScreen] = useState();
 
@@ -50,7 +50,7 @@ export default function VideoMeetComponent() {
 
   let [message, setMessage] = useState("");
 
-  let [newMessages, setNewMessages] = useState(3);
+  let [newMessages, setNewMessages] = useState(0);
 
   let [askForUsername, setAskForUsername] = useState(true);
 
@@ -59,6 +59,11 @@ export default function VideoMeetComponent() {
   const videoRef = useRef([]);
 
   let [videos, setVideos] = useState([]);
+
+  // New state for inline error message
+  const [usernameError, setUsernameError] = useState("");
+
+  const chatContainerRef = useRef(null);
 
   // TODO
   // if(isChrome() === false) {
@@ -148,8 +153,8 @@ export default function VideoMeetComponent() {
   // Removed useEffect on [video, audio] to prevent re-negotiation
 
   let getMedia = () => {
-    setVideo(videoAvailable);
-    setAudio(audioAvailable);
+    // setVideo(videoAvailable);
+    // setAudio(audioAvailable);
     connectToSocketServer();
     getUserMedia(); // Explicitly call getUserMedia once on join
   };
@@ -163,6 +168,13 @@ export default function VideoMeetComponent() {
 
     window.localStream = stream;
     localVideoref.current.srcObject = stream;
+
+    if (stream.getVideoTracks().length > 0) {
+      stream.getVideoTracks()[0].enabled = video;
+    }
+    if (stream.getAudioTracks().length > 0) {
+      stream.getAudioTracks()[0].enabled = audio;
+    }
 
     for (let id in connections) {
       if (id === socketIdRef.current) continue;
@@ -338,7 +350,11 @@ export default function VideoMeetComponent() {
       socketRef.current.emit("join-call", window.location.href);
       socketIdRef.current = socketRef.current.id;
 
-      socketRef.current.on("chat-message", addMessage);
+      socketRef.current.on("chat-message", (data, sender, socketIdSender) => {
+        if (socketIdSender !== socketIdRef.current) {
+          addMessage(data, sender, socketIdSender);
+        }
+      });
 
       socketRef.current.on("user-left", (id) => {
         setVideos((videos) => videos.filter((video) => video.socketId !== id));
@@ -465,23 +481,28 @@ export default function VideoMeetComponent() {
   let handleVideo = () => {
     setVideo((prev) => {
       const newVideo = !prev;
-      try {
-        // Priority 1: Toggle window.localStream (sent to peers)
-        if (window.localStream && window.localStream.getVideoTracks) {
-          window.localStream.getVideoTracks().forEach((track) => {
-            track.enabled = newVideo;
-          });
-        }
 
-        // Priority 2: Toggle local element (if different/preview)
-        if (localVideoref.current && localVideoref.current.srcObject) {
-          localVideoref.current.srcObject.getVideoTracks().forEach((track) => {
-            track.enabled = newVideo;
-          });
+      // If turning OFF: Stop all tracks and clear srcObject
+      if (!newVideo) {
+        try {
+          if (localVideoref.current && localVideoref.current.srcObject) {
+            localVideoref.current.srcObject.getTracks().forEach(t => t.stop());
+            localVideoref.current.srcObject = null;
+          }
+          if (window.localStream) {
+            window.localStream.getTracks().forEach(t => t.stop());
+            // Don't nullify window.localStream immediately if we need it for later, 
+            // but for "OFF" state, stopping tracks is key. 
+          }
+        } catch (e) {
+          console.error("Error stopping video:", e);
         }
-      } catch (e) {
-        console.error("Error toggling video:", e);
       }
+      // If turning ON: Re-acquire media
+      else {
+        getPermissions();
+      }
+
       return newVideo;
     });
   };
@@ -563,22 +584,36 @@ export default function VideoMeetComponent() {
   const addMessage = (data, sender, socketIdSender) => {
     setMessages((prevMessages) => [
       ...prevMessages,
-      { sender: sender, data: data },
+      { sender: sender, data: data, socketIdSender: socketIdSender },
     ]);
     if (socketIdSender !== socketIdRef.current) {
       setNewMessages((prevNewMessages) => prevNewMessages + 1);
     }
   };
 
-  let sendMessage = () => {
-    console.log(socketRef.current);
-    socketRef.current.emit("chat-message", message, username);
-    setMessage("");
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages, showChat]);
 
-    // this.setState({ message: "", sender: username })
+  let sendMessage = () => {
+    if (message.trim() === "") return;
+    socketRef.current.emit("chat-message", message, username);
+    // Optimistically add message to local state so sender sees it
+    addMessage(message, username, socketIdRef.current);
+    setMessage("");
   };
 
   let connect = () => {
+    // Clear previous error
+    setUsernameError("");
+
+    const isValid = /^[a-zA-Z0-9]+$/.test(username);
+    if (!username || !isValid) {
+      setUsernameError("Please enter a valid username (Alphanumeric only, no spaces).");
+      return;
+    }
     setAskForUsername(false);
     getMedia();
   };
@@ -599,6 +634,14 @@ export default function VideoMeetComponent() {
           <div className={styles.lobbyCard}>
             <h1 className={styles.lobbyTitle}>Join Meeting</h1>
             <p className={styles.lobbySubtitle}>Enter your name to get started</p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+              <IconButton onClick={handleVideo} style={{ backgroundColor: video ? '#333' : '#ff4d4d', color: 'white', marginRight: '10px' }}>
+                {video ? <VideocamIcon /> : <VideocamOffIcon />}
+              </IconButton>
+              <IconButton onClick={handleAudio} style={{ backgroundColor: audio ? '#333' : '#ff4d4d', color: 'white' }}>
+                {audio ? <MicIcon /> : <MicOffIcon />}
+              </IconButton>
+            </div>
             <TextField
               sx={{
                 mb: 3,
@@ -614,7 +657,18 @@ export default function VideoMeetComponent() {
               label="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  connect();
+                }
+              }}
             />
+            {/* Inline Error Message */}
+            {usernameError && (
+              <p style={{ color: '#ff4d4d', fontSize: '0.9rem', marginTop: '-15px', marginBottom: '20px' }}>
+                {usernameError}
+              </p>
+            )}
             <Button
               variant="contained"
               fullWidth
@@ -631,7 +685,23 @@ export default function VideoMeetComponent() {
             </Button>
 
             <div style={{ marginTop: 20, textAlign: 'center' }}>
-              <video ref={localVideoref} autoPlay muted style={{ width: '100%', borderRadius: 10, marginTop: 10, background: '#000' }} />
+              {video && videoAvailable ? (
+                <video ref={localVideoref} autoPlay muted style={{ width: '100%', borderRadius: 10, marginTop: 10, background: '#000', transform: 'scaleX(-1)' }} />
+              ) : (
+                <div style={{
+                  width: '100%',
+                  height: '200px', // Approximate height of the video
+                  borderRadius: 10,
+                  marginTop: 10,
+                  background: '#2a2a2a',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#888'
+                }}>
+                  <FontAwesomeIcon icon={faUser} size="4x" color="#bdbdbd" />
+                </div>
+              )}
             </div>
 
           </div>
@@ -643,14 +713,17 @@ export default function VideoMeetComponent() {
             <div className={styles.chatContainer}>
               <h1>In-Call Messages</h1>
 
-              <div className={styles.chattingDisplay}>
+              <div className={styles.chattingDisplay} ref={chatContainerRef}>
                 {messages.length > 0 ? (
-                  messages.map((item, index) => (
-                    <div key={index}>
-                      <p>{item.sender}</p>
-                      <p>{item.data}</p>
-                    </div>
-                  ))
+                  messages.map((item, index) => {
+                    const isSelf = item.socketIdSender === socketIdRef.current;
+                    return (
+                      <div key={index} className={isSelf ? styles.messageSelf : styles.messageOther}>
+                        <p className={styles.msgSender}>{item.sender}</p>
+                        <p className={styles.msgText}>{item.data}</p>
+                      </div>
+                    )
+                  })
                 ) : (
                   <p style={{ color: "#888", textAlign: "center", marginTop: 20 }}>
                     No messages yet.
@@ -680,9 +753,19 @@ export default function VideoMeetComponent() {
                     }
                   }}
                 />
-                <IconButton onClick={sendMessage} sx={{ color: "#00C6FF" }}>
-                  <ChatIcon />
-                </IconButton>
+                <Button
+                  variant="contained"
+                  onClick={sendMessage}
+                  sx={{
+                    ml: 1,
+                    background: "linear-gradient(135deg, #00C6FF 0%, #0072FF 100%)",
+                    color: "white",
+                    textTransform: "none",
+                    fontWeight: 600
+                  }}
+                >
+                  Send
+                </Button>
               </div>
             </div>
           </div>
@@ -771,7 +854,7 @@ export default function VideoMeetComponent() {
             </IconButton>
 
             <IconButton onClick={() => setShowChat(!showChat)} style={{ backgroundColor: showChat ? '#0072FF' : '#333', color: 'white' }}>
-              <Badge badgeContent={newMessages} color="secondary">
+              <Badge badgeContent={newMessages} color="secondary" invisible={newMessages === 0}>
                 <ChatIcon />
               </Badge>
             </IconButton>

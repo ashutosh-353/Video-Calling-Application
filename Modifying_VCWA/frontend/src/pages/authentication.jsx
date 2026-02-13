@@ -1,4 +1,6 @@
+
 import * as React from "react";
+import { GoogleLogin } from '@react-oauth/google';
 import { useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -41,7 +43,20 @@ export default function Authentication() {
 
   const [open, setOpen] = React.useState(false);
 
-  const { handleRegister, handleLogin } = React.useContext(AuthContext);
+  const { handleRegister, handleLogin, handleLoginWithGoogle } = React.useContext(AuthContext);
+
+  const googleSuccess = async (credentialResponse) => {
+    try {
+      await handleLoginWithGoogle(credentialResponse.credential, credentialResponse.clientId);
+    } catch (err) {
+      console.log(err);
+      setError("Google Login Failed");
+    }
+  };
+
+  const googleFailure = () => {
+    setError("Google Login Failed");
+  };
 
   let handleAuth = async () => {
     try {
@@ -131,10 +146,17 @@ export default function Authentication() {
               </Button>
             </div>
 
+            <Box sx={{ mt: 2 }}>
+              <GoogleLogin
+                onSuccess={googleSuccess}
+                onError={googleFailure}
+              />
+            </Box>
+
             <Box
               component="form"
               noValidate
-              sx={{ mt: 1, position:"relative" }}
+              sx={{ mt: 1, position: "relative" }}
               className={`auth-form-fade`}
               onSubmit={(e) => {
                 e.preventDefault();
