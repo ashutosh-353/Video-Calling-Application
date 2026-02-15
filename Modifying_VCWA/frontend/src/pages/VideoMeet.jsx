@@ -63,51 +63,71 @@ export default function VideoMeetComponent() {
 
   let [username, setUsername] = useState("");
 
-  // --- Recording Logic ---
-  const [isRecording, setIsRecording] = useState(false);
-  const mediaRecorderRef = useRef(null);
-  const recordedChunksRef = useRef([]);
+  // --- Screen Recording Logic ---
+  const [isScreenRecording, setIsScreenRecording] = useState(false);
+  const screenRecorderRef = useRef(null);
+  const screenRecordingChunks = useRef([]);
 
-  const handleRecording = () => {
-    if (isRecording) {
+  const handleScreenRecording = async () => {
+    if (isScreenRecording) {
       // Stop Recording
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
+      if (screenRecorderRef.current) {
+        screenRecorderRef.current.stop();
+      }
+      setIsScreenRecording(false);
     } else {
       // Start Recording
-      if (!window.localStream) {
-        alert("No stream to record!");
-        return;
-      }
-
       try {
-        const streamToRecord = window.localStream;
-        mediaRecorderRef.current = new MediaRecorder(streamToRecord, { mimeType: 'video/webm' });
-        recordedChunksRef.current = [];
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            sampleRate: 44100
+          },
+          systemAudio: "include"
+        });
 
-        mediaRecorderRef.current.ondataavailable = (event) => {
+        const mimeType = MediaRecorder.isTypeSupported("video/webm; codecs=vp9")
+          ? "video/webm; codecs=vp9"
+          : "video/webm";
+
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
+        screenRecorderRef.current = mediaRecorder;
+        screenRecordingChunks.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
           if (event.data.size > 0) {
-            recordedChunksRef.current.push(event.data);
+            screenRecordingChunks.current.push(event.data);
           }
         };
 
-        mediaRecorderRef.current.onstop = () => {
-          const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(screenRecordingChunks.current, { type: "video/webm" });
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.style.display = 'none';
+          const a = document.createElement("a");
+          a.style.display = "none";
           a.href = url;
-          a.download = `recording-${new Date().toISOString()}.webm`;
+          a.download = `screen-recording-${new Date().toISOString()}.webm`;
           document.body.appendChild(a);
           a.click();
           window.URL.revokeObjectURL(url);
+          setIsScreenRecording(false);
+          // Stop all tracks to clear the "sharing" indicator
+          stream.getTracks().forEach(track => track.stop());
         };
 
-        mediaRecorderRef.current.start();
-        setIsRecording(true);
-      } catch (e) {
-        console.error("Error starting recording:", e);
-        alert("Recording failed to start. Browser may not support webm.");
+        // If user stops sharing from browser UI
+        stream.getVideoTracks()[0].onended = () => {
+          if (mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+          }
+        };
+
+        mediaRecorder.start();
+        setIsScreenRecording(true);
+      } catch (err) {
+        console.error("Error starting screen recording:", err);
       }
     }
   };
@@ -123,8 +143,14 @@ export default function VideoMeetComponent() {
 
   // --- Live Captions Logic ---
   const [showCaptions, setShowCaptions] = useState(false);
+  const showCaptionsRef = useRef(false); // Track state for listeners
   const [captionText, setCaptionText] = useState("");
   const recognitionRef = useRef(null);
+
+  // Sync Ref with State
+  useEffect(() => {
+    showCaptionsRef.current = showCaptions;
+  }, [showCaptions]);
 
   // Initialize Speech Recognition
   useEffect(() => {
@@ -136,10 +162,12 @@ export default function VideoMeetComponent() {
       recognitionRef.current.lang = 'en-US';
 
       recognitionRef.current.onresult = (event) => {
+        if (!showCaptionsRef.current) return; // Guard clause
+
         const current = event.resultIndex;
         const transcript = event.results[current][0].transcript;
 
-        // Emit caption to peers
+        // Emit caption to peers only if enabled
         if (socketRef.current) {
           socketRef.current.emit("send-caption", transcript, username);
         }
@@ -148,12 +176,12 @@ export default function VideoMeetComponent() {
       };
 
       recognitionRef.current.onend = () => {
-        if (showCaptions && recognitionRef.current) {
+        if (showCaptionsRef.current && recognitionRef.current) {
           try { recognitionRef.current.start(); } catch (e) { }
         }
       };
     }
-  }, [username, showCaptions]);
+  }, [username]); // Removed showCaptions dependency to avoid re-creation
 
   // Toggle Captions
   const handleCaptions = () => {
@@ -163,25 +191,32 @@ export default function VideoMeetComponent() {
       return;
     }
 
-    if (showCaptions) {
-      if (recognitionRef.current) recognitionRef.current.stop();
-      setShowCaptions(false);
-      setCaptionText("");
-    } else {
-      try {
-        if (recognitionRef.current) recognitionRef.current.start();
-        setShowCaptions(true);
-      } catch (e) { console.error(e); }
-    }
+    setShowCaptions((prev) => {
+      const newState = !prev;
+      if (newState) {
+        try {
+          if (recognitionRef.current) recognitionRef.current.start();
+        } catch (e) {
+          // If already started, ignore error
+          console.log("Speech recognition already started");
+        }
+      } else {
+        if (recognitionRef.current) recognitionRef.current.stop();
+        setCaptionText("");
+      }
+      return newState;
+    });
   };
 
   // Socket Listener for Captions
   useEffect(() => {
     if (socketRef.current) {
       socketRef.current.on("receive-caption", (text, senderName) => {
-        setCaptionText(`${senderName}: ${text}`);
-        // Auto-clear after 5 seconds
-        setTimeout(() => setCaptionText(""), 5000);
+        if (showCaptionsRef.current) {
+          setCaptionText(`${senderName}: ${text}`);
+          // Auto-clear after 5 seconds
+          setTimeout(() => setCaptionText(""), 5000);
+        }
       });
     }
   }, [socketRef.current]);
@@ -215,7 +250,15 @@ export default function VideoMeetComponent() {
     if (screen) {
       if (navigator.mediaDevices.getDisplayMedia) {
         navigator.mediaDevices
-          .getDisplayMedia({ video: true, audio: true })
+          .getDisplayMedia({
+            video: true,
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              sampleRate: 44100
+            },
+            systemAudio: "include"
+          })
           .then(getDisplayMediaSuccess)
           .catch((e) => {
             setScreen(false); // reset icon if cancelled
@@ -1053,14 +1096,14 @@ export default function VideoMeetComponent() {
             </IconButton>
 
             <IconButton onClick={handleScreen} style={{ backgroundColor: screen ? '#0072FF' : '#333', color: 'white' }}>
-              {screen ? <StopScreenShareIcon /> : <ScreenShareIcon />}
+              {screen ? <ScreenShareIcon /> : <StopScreenShareIcon />}
             </IconButton>
 
             <IconButton onClick={handleCaptions} style={{ backgroundColor: showCaptions ? '#0072FF' : '#333', color: 'white' }}>
               {showCaptions ? <ClosedCaptionIcon /> : <ClosedCaptionDisabledIcon />}
             </IconButton>
 
-            <IconButton onClick={handleRecording} style={{ backgroundColor: isRecording ? '#ff4d4d' : '#333', color: 'white', animation: isRecording ? 'pulse 1.5s infinite' : 'none' }}>
+            <IconButton onClick={handleScreenRecording} style={{ backgroundColor: isScreenRecording ? '#ff4d4d' : '#333', color: 'white', animation: isScreenRecording ? 'pulse 1.5s infinite' : 'none' }}>
               <FiberManualRecordIcon />
             </IconButton>
 
