@@ -1091,7 +1091,7 @@ export default function VideoMeetComponent() {
               {audio ? <MicIcon /> : <MicOffIcon />}
             </IconButton>
 
-            <IconButton onClick={handleEndCall} style={{ backgroundColor: '#ff4d4d', color: 'white', padding: 15, margin: '0 10px' }}>
+            <IconButton onClick={handleEndCall} className={styles.endCallButton}>
               <CallEndIcon fontSize="medium" />
             </IconButton>
 
