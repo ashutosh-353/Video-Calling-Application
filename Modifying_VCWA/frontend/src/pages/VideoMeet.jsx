@@ -42,6 +42,11 @@ export default function VideoMeetComponent() {
   let [audioAvailable, setAudioAvailable] = useState(true);
 
   let [video, setVideo] = useState(true);
+  const videoRef = useRef(video);
+
+  useEffect(() => {
+    videoRef.current = video;
+  }, [video]);
 
   let [audio, setAudio] = useState(true);
 
@@ -140,6 +145,8 @@ export default function VideoMeetComponent() {
   const [usernameError, setUsernameError] = useState("");
 
   const chatContainerRef = useRef(null);
+
+  const [remoteVideoStates, setRemoteVideoStates] = useState({});
 
   // --- Live Captions Logic ---
   const [showCaptions, setShowCaptions] = useState(false);
@@ -475,6 +482,13 @@ export default function VideoMeetComponent() {
   let gotMessageFromServer = (fromId, message) => {
     var signal = JSON.parse(message);
 
+    if (signal.videoToggle !== undefined) {
+      setRemoteVideoStates((prev) => ({
+        ...prev,
+        [fromId]: signal.videoToggle,
+      }));
+    }
+
     if (fromId !== socketIdRef.current) {
       if (signal.sdp) {
         connections[fromId]
@@ -531,6 +545,26 @@ export default function VideoMeetComponent() {
       });
 
       socketRef.current.on("user-joined", (id, clients) => {
+        if (id !== socketIdRef.current) {
+          // A new peer joined. Send them my current video state.
+          socketRef.current.emit(
+            "signal",
+            id,
+            JSON.stringify({ videoToggle: videoRef.current })
+          );
+        } else {
+          // I just joined. Send my video state to everyone else in the room.
+          clients.forEach((c) => {
+            if (c !== socketIdRef.current) {
+              socketRef.current.emit(
+                "signal",
+                c,
+                JSON.stringify({ videoToggle: videoRef.current })
+              );
+            }
+          });
+        }
+
         clients.forEach((socketListId) => {
           connections[socketListId] = new RTCPeerConnection(
             peerConfigConnections
@@ -649,6 +683,17 @@ export default function VideoMeetComponent() {
   let handleVideo = () => {
     setVideo((prev) => {
       const newVideo = !prev;
+
+      // Broadcast video state to peers
+      for (let id in connections) {
+        if (id !== socketIdRef.current) {
+          socketRef.current.emit(
+            "signal",
+            id,
+            JSON.stringify({ videoToggle: newVideo })
+          );
+        }
+      }
 
       if (!newVideo) {
         // Turning Video OFF
@@ -1043,9 +1088,10 @@ export default function VideoMeetComponent() {
             )}
 
             {/* Remote Participants - Only show when NOT alone (implied by logic, but good to be explicit or just let map handle 0 items) */}
-            {videos
-              .filter((videoItem) => hasLiveVideoStream(videoItem.stream))
-              .map((videoItem) => (
+            {videos.map((videoItem) => {
+              const isVideoEnabled = remoteVideoStates[videoItem.socketId] !== false;
+
+              return isVideoEnabled ? (
                 <video
                   key={videoItem.socketId}
                   ref={(ref) => {
@@ -1056,7 +1102,12 @@ export default function VideoMeetComponent() {
                   autoPlay
                   playsInline
                 />
-              ))}
+              ) : (
+                <div key={videoItem.socketId} className={styles.videoPlaceholder}>
+                  <FontAwesomeIcon icon={faUser} size="4x" color="#bdbdbd" />
+                </div>
+              );
+            })}
             {/* Caption Overlay */}
             {captionText && (
               <div style={{
