@@ -373,23 +373,17 @@ export default function VideoMeetComponent() {
       });
     }
 
-    stream.getTracks().forEach(
-      (track) =>
-      (track.onended = () => {
-        setVideo(false);
-        setAudio(false);
-
-        try {
-          let tracks = localVideoref.current.srcObject.getTracks();
-          tracks.forEach((track) => track.stop());
-        } catch (e) {
-          console.log(e);
+    stream.getTracks().forEach((track) => {
+      track.onended = () => {
+        // Isolate behavior depending on what kind of track actually ended
+        if (track.kind === "video") {
+          setVideo(false);
+        } else if (track.kind === "audio") {
+          setAudio(false);
         }
 
-        // let blackSilence = (...args) =>
-        //   new MediaStream([black(...args), silence()]);
-        // window.localStream = blackSilence();
-        localVideoref.current.srcObject = window.localStream;
+        // We explicitly DO NOT call track.stop() on all tracks here
+        // because losing the video should NOT destroy the microphone stream.
 
         for (let id in connections) {
           connections[id].addStream(window.localStream);
@@ -407,8 +401,8 @@ export default function VideoMeetComponent() {
               .catch((e) => console.log(e));
           });
         }
-      })
-    );
+      };
+    });
   };
 
   let getUserMedia = () => {
@@ -681,119 +675,112 @@ export default function VideoMeetComponent() {
   }, [video, videoAvailable]);
 
   let handleVideo = () => {
-    setVideo((prev) => {
-      const newVideo = !prev;
+    const newVideo = !video; // Compute deterministically outside setter
+    setVideo(newVideo); // Pure state update
 
-      // Broadcast video state to peers
-      for (let id in connections) {
-        if (id !== socketIdRef.current) {
-          socketRef.current.emit(
-            "signal",
-            id,
-            JSON.stringify({ videoToggle: newVideo })
-          );
-        }
+    // Broadcast video state to peers
+    for (let id in connections) {
+      if (id !== socketIdRef.current) {
+        socketRef.current.emit(
+          "signal",
+          id,
+          JSON.stringify({ videoToggle: newVideo })
+        );
       }
+    }
 
-      if (!newVideo) {
-        // Turning Video OFF
-        try {
-          // Stop the tracks on the window.localStream (source of truth for peers)
-          if (window.localStream) {
-            window.localStream.getVideoTracks().forEach((track) => {
-              track.stop();
-              // track.enabled = false; // Just stop is enough for "hardware off"
-            });
-          }
-          // Also stop tracks on the video element if different
-          if (localVideoref.current && localVideoref.current.srcObject) {
-            localVideoref.current.srcObject.getVideoTracks().forEach((track) => {
-              track.stop();
-            });
-          }
-        } catch (e) {
-          console.error("Error stopping video:", e);
-        }
-      } else {
-        // Turning Video ON
-        console.log("Turn video ON");
-        navigator.mediaDevices
-          .getUserMedia({ video: true, audio: audio })
-          .then((newStream) => {
-            const newVideoTrack = newStream.getVideoTracks()[0];
-
-            // 1. Update local stream
-            if (window.localStream) {
-              // Remove dead tracks
-              window.localStream.getVideoTracks().forEach(t => window.localStream.removeTrack(t));
-              window.localStream.addTrack(newVideoTrack);
-            } else {
-              window.localStream = newStream;
-            }
-
-            // 2. Update local view
-            if (localVideoref.current) {
-              localVideoref.current.srcObject = window.localStream;
-            }
-
-            // 3. Update Peer Connections
-            for (let id in connections) {
-              const sender = connections[id].getSenders().find((s) => s.track && s.track.kind === "video");
-
-              if (sender) {
-                console.log(`Replacing track for ${id}`);
-                sender.replaceTrack(newVideoTrack).catch(e => console.error("Replace Track Error: ", e));
-              } else {
-                console.log(`Adding track for ${id} and renegotiating`);
-                connections[id].addTrack(newVideoTrack, window.localStream);
-
-                // Renegotiate - Create new offer
-                connections[id].createOffer().then((description) => {
-                  connections[id]
-                    .setLocalDescription(description)
-                    .then(() => {
-                      socketRef.current.emit(
-                        "signal",
-                        id,
-                        JSON.stringify({ sdp: connections[id].localDescription })
-                      );
-                    })
-                    .catch((e) => console.log(e));
-                });
-              }
-            }
-          })
-          .catch((e) => console.error("Error restarting video:", e));
-      }
-
-      return newVideo;
-    });
-  };
-
-  let handleAudio = () => {
-    setAudio((prevAudio) => {
-      const newAudioState = !prevAudio;
-
+    if (!newVideo) {
+      // Turning Video OFF
       try {
-        // Priority 1: Toggle window.localStream (sent to peers)
-        if (window.localStream && window.localStream.getAudioTracks) {
-          window.localStream.getAudioTracks().forEach((track) => {
-            track.enabled = newAudioState;
+        if (window.localStream) {
+          window.localStream.getVideoTracks().forEach((track) => {
+            // Only stop the video track, leave audio alone
+            track.stop();
           });
         }
-
-        // Priority 2: Toggle local element (if different/preview)
         if (localVideoref.current && localVideoref.current.srcObject) {
-          localVideoref.current.srcObject.getAudioTracks().forEach((track) => {
-            track.enabled = newAudioState;
+          localVideoref.current.srcObject.getVideoTracks().forEach((track) => {
+            track.stop();
           });
         }
       } catch (e) {
-        console.error("Error toggling audio:", e);
+        console.error("Error stopping video:", e);
+      }
+    } else {
+      // Turning Video ON
+      console.log("Turn video ON");
+      // CRITICAL FIX: Only ask for video. Never request audio here to prevent duplicate mic feeds!
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((newStream) => {
+          const newVideoTrack = newStream.getVideoTracks()[0];
+
+          // 1. Update local stream
+          if (window.localStream) {
+            // Safely remove dead video tracks without touching audio
+            window.localStream.getVideoTracks().forEach(t => window.localStream.removeTrack(t));
+            window.localStream.addTrack(newVideoTrack);
+          } else {
+            window.localStream = newStream;
+          }
+
+          // 2. Update local view
+          if (localVideoref.current) {
+            localVideoref.current.srcObject = window.localStream;
+          }
+
+          // 3. Update Peer Connections
+          for (let id in connections) {
+            const sender = connections[id].getSenders().find((s) => s.track && s.track.kind === "video");
+
+            if (sender) {
+              console.log(`Replacing track for ${id}`);
+              sender.replaceTrack(newVideoTrack).catch(e => console.error("Replace Track Error: ", e));
+            } else {
+              console.log(`Adding track for ${id} and renegotiating`);
+              connections[id].addTrack(newVideoTrack, window.localStream);
+
+              // Renegotiate - Create new offer
+              connections[id].createOffer().then((description) => {
+                connections[id]
+                  .setLocalDescription(description)
+                  .then(() => {
+                    socketRef.current.emit(
+                      "signal",
+                      id,
+                      JSON.stringify({ sdp: connections[id].localDescription })
+                    );
+                  })
+                  .catch((e) => console.log(e));
+              });
+            }
+          }
+        })
+        .catch((e) => console.error("Error restarting video:", e));
+    }
+  };
+
+  let handleAudio = () => {
+    const newAudioState = !audio; // Compute deterministically
+    setAudio(newAudioState); // Pure state update
+
+    try {
+      // Priority 1: Toggle window.localStream (sent to peers)
+      if (window.localStream && window.localStream.getAudioTracks) {
+        window.localStream.getAudioTracks().forEach((track) => {
+          track.enabled = newAudioState;
+        });
       }
 
-      return newAudioState;
-    });
+      // Priority 2: Toggle local element (if different/preview)
+      if (localVideoref.current && localVideoref.current.srcObject) {
+        localVideoref.current.srcObject.getAudioTracks().forEach((track) => {
+          track.enabled = newAudioState;
+        });
+      }
+    } catch (e) {
+      console.error("Error toggling audio:", e);
+    }
   };
 
   useEffect(() => {
