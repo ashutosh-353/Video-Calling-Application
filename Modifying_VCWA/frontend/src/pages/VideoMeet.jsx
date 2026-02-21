@@ -166,20 +166,26 @@ export default function VideoMeetComponent() {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = 'en-US';
+      recognitionRef.current.lang = window.navigator.language || 'en-US';
+      recognitionRef.current.maxAlternatives = 1;
 
       recognitionRef.current.onresult = (event) => {
         if (!showCaptionsRef.current) return; // Guard clause
 
-        const current = event.resultIndex;
-        const transcript = event.results[current][0].transcript;
+        // Dynamically join the full set of interim results currently stored in the event
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          transcript += event.results[i][0].transcript;
+        }
 
         // Emit caption to peers only if enabled
-        if (socketRef.current) {
+        if (socketRef.current && transcript.trim() !== "") {
           socketRef.current.emit("send-caption", transcript, username);
         }
         // Show local caption
-        setCaptionText(`${username}: ${transcript}`);
+        if (transcript.trim() !== "") {
+          setCaptionText(`${username}: ${transcript}`);
+        }
       };
 
       recognitionRef.current.onend = () => {
